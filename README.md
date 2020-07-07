@@ -1,4 +1,4 @@
 # loundr
 ### Money transactions made easy
 
-![App Logo - loundr|250x250](/assets/splash.png)
+![App Logo - loundr|25x25](/assets/splash.png)
