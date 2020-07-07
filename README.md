@@ -1,4 +1,4 @@
 # loundr
 ### Making money transactions easy
 
-![App Logo - loundr](/assets/splash.png =250x250)
+<img src="drawing.jpg" alt="drawing" width="200"/>
