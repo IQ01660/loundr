@@ -20,6 +20,7 @@ const AuthStackNavigator = createStackNavigator(
   {
     initialRouteName: "SignIn",
     defaultNavigationOptions: {
+      headerShown: false,
       headerStyle: {
         backgroundColor: Colors.logoColor,
         shadowOffset: {
