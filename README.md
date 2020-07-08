@@ -68,7 +68,7 @@ and
 git pull origin master
 ```
 
-*** At this point make sure you do not make any changes to any files in the project folder on your local computer. ***
+***At this point make sure you do not make any changes to any files in the project folder on your local computer.***
 
 Then create a new branch with the following naming convention:
 > [screen name/component/file]-[the aspect you wanna change if not the whole file]-[any unique ids if needed]
@@ -84,7 +84,7 @@ git checkout your-branch
 ```
 and then switch to it.
 
-Now you can do all the neede changes before doing the standard
+Now you can do all the needed changes before with the standard:
 
 ```bash
 git status
@@ -101,7 +101,7 @@ Then do
 ```bash
 git push origin your-branch
 ```
-*** It is important to nut push anything to master at this point ***
+***It is important to nut push anything to master at this point***
 
 After this I will go and merge your-branch with master if needed
 through GitHub's pull request and then delete your-branch remotely. 
@@ -117,13 +117,15 @@ and then delete your local branch
 git branch -d your-branch
 ```
 
-If you already want to work on a specific branch that already exists remotely,
-then you should make sure to first ***create that branch locally (with the same name)***
+If you want to work on a specific branch that already exists remotely and/or locally,
+then you should make sure to first ***create that branch locally (with the same name)*** 
+if you do not have it already
 and then you can ***checkout that branch*** and do
 ```bash
 git pull origin some-branch
 ```
 
+**Note: always check the branch you are on before making any changes to files or doing git adds and git commits**
 
 
 
