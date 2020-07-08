@@ -50,4 +50,9 @@ The following developers helped this idea become a reality:
 <img src="https://avatars2.githubusercontent.com/u/34740725?s=400&u=15efe798db9cf249e596e47f2591dcadda0e6ec0&v=4" width="100" height="100">
 <img src="https://avatars1.githubusercontent.com/u/29056703?s=460&u=c2932f32a8c593d5db91ab1ca6dac3967d226078&v=4" width="100" height="100">
 
+## Collab
+```bash
+git pull origin master
+```
+
 
