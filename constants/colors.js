@@ -23,6 +23,9 @@ export default {
   //use cases: general
   customWhite: "#ffffff",
 
+  //color for text input placeholders
+  placeHolderColor: '#bfbfbf',
+
   //button color (bright aquamarine)
   btnColor: '#109c95',
 

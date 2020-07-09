@@ -1,14 +1,17 @@
 import React, { Component } from 'react';
 import {
 	StyleSheet,
-    View,
-    Text,
-    Button,
+	View,
+	Text,
+	Button,
 	TouchableWithoutFeedback,
 	Keyboard,
 	KeyboardAvoidingView,
 	Platform,
 } from 'react-native';
+
+//imports from outside
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 
 //constants
 import Colors from '../../../constants/colors';
@@ -64,68 +67,69 @@ class SignInScreen extends Component {
 
 	render() {
 		return (
-			<KeyboardAvoidingView behavior={Platform.OS == 'ios' ? 'padding' : 'height'} style={styles.container}>
+			<KeyboardAwareScrollView contentContainerStyle={styles.containerContent} style={styles.container}>
 				<TouchableWithoutFeedback onPress={Keyboard.dismiss}>
 					<View style={styles.inner}>
 						<SignInLogo style={styles.logo} />
-                        <View style={styles.loginContainer}>
-                            <CredInput 
-                                onChangeText={this.onChangeUsername}
-                                value={this.state.userInputs.username}
-                                style={styles.input}
-                                placeholder="username..."
-                                autoCompleteType="username"
-                                secureTextEntry={false}
-                            />
-                            <CredInput 
-                                onChangeText={this.onChangePassword}
-                                value={this.state.userInputs.password}
-                                style={styles.input}
-                                placeholder="password..."
-                                autoCompleteType="password"
-                                secureTextEntry={true}
-                            />
-                            <SubmitButton style={styles.submitBtn} title="log in" backgroundColor={Colors.btnColor} />
+						<View style={styles.loginContainer}>
+							<CredInput
+								onChangeText={this.onChangeUsername}
+								value={this.state.userInputs.username}
+								style={styles.input}
+								placeholder="username..."
+								autoCompleteType="username"
+								secureTextEntry={false}
+							/>
+							<CredInput
+								onChangeText={this.onChangePassword}
+								value={this.state.userInputs.password}
+								style={styles.input}
+								placeholder="password..."
+								autoCompleteType="password"
+								secureTextEntry={true}
+							/>
                             
-                            <Text style={styles.question} >Don't have an account yet?</Text>
-                            <MinorButton title="Sign Up" color={Colors.btnColor} style={styles.submitBtn}/>
-                        </View>
+							<SubmitButton style={styles.submitBtn} title="log in" backgroundColor={Colors.btnColor} />
+
+							<Text style={styles.question}>Don't have an account yet?</Text>
+							<MinorButton title="Sign Up" color={Colors.btnColor} style={styles.submitBtn} />
+						</View>
 					</View>
 				</TouchableWithoutFeedback>
-			</KeyboardAvoidingView>
+			</KeyboardAwareScrollView>
 		);
 	}
 }
 
 const styles = StyleSheet.create({
 	container: {
-        flex: 1,
-        backgroundColor: Colors.logoColor,
+		backgroundColor: Colors.logoColor,
 	},
 	inner: {
-		padding: 24,
-		flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-    },
-    logo: {
-        marginVertical: 50,
-    },
-    loginContainer: {
-        width: '82%',
-        alignItems: 'center',
-    },
+        padding: 24,
+        flex:1,
+		justifyContent: 'flex-start',
+		alignItems: 'center',
+		// backgroundColor: Colors.customBlack,
+	},
+	logo: {
+		marginVertical: 50,
+	},
+	loginContainer: {
+		width: '82%',
+		alignItems: 'center',
+	},
 	input: {
-        marginVertical: 15,
-    },
-    submitBtn: {
-        marginVertical: 15,
-    },
-    question: {
-        color: Colors.customWhite,
-        fontSize: FontSizes.minorText,
-        fontFamily: 'mont-alt-regular',
-    },
+		marginVertical: 15,
+	},
+	submitBtn: {
+		marginVertical: 15,
+	},
+	question: {
+		color: Colors.customWhite,
+		fontSize: FontSizes.minorText,
+		fontFamily: 'mont-alt-regular',
+	},
 });
 
 export default SignInScreen;

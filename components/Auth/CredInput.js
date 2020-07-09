@@ -21,7 +21,7 @@ export default function CredInput(props) {
 			style={{ ...styles.input, ...props.style }}
 			autoCapitalize="none"
 			placeholder={props.placeholder}
-			placeholderTextColor={Colors.customWhite}
+			placeholderTextColor={Colors.placeHolderColor}
 			secureTextEntry={props.secureTextEntry}
 			autoCompleteType={props.autoCompleteType}
 		/>
