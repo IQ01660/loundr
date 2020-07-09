@@ -5,8 +5,8 @@ import Colors from '../constants/colors';
 import FontSizes from '../constants/fontSizes';
 
 /**
- * Accepts a title and a backgroundColor prop.
- * As well as a style prop
+ * Accepts a title, an onPress, and a backgroundColor prop.
+ * As well as a style prop.
  * Takes the whole width of the container.
  * @param {*} props 
  */

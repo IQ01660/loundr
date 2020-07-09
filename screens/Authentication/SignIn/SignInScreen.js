@@ -3,11 +3,9 @@ import {
 	StyleSheet,
 	View,
 	Text,
-	Button,
 	TouchableWithoutFeedback,
-	Keyboard,
-	KeyboardAvoidingView,
-	Platform,
+    Keyboard,
+    Alert,
 } from 'react-native';
 
 //imports from outside
@@ -27,6 +25,7 @@ class SignInScreen extends Component {
 	static navigationOptions = {};
 
 	state = {
+        //contains the values entered of the input fields
 		userInputs: {
 			username: '',
 			password: '',
@@ -63,15 +62,33 @@ class SignInScreen extends Component {
 				},
 			};
 		});
-	};
+    };
+    
+    /**
+     * called when "Log In" is clicked
+     */
+    onLogIn = () => {};
+
+    /**
+     * navigating to sign up page
+     */
+    onSignUpNavigate = () => {};
+
+    /**
+     * navigating to forgot password screen
+     */
+    onForgotPassword = () => {};
 
 	render() {
 		return (
-			<KeyboardAwareScrollView contentContainerStyle={styles.containerContent} style={styles.container}>
+            // ****** IT IS IMPORTANT TO HAVE flexGrow: 1 HERE ******
+			<KeyboardAwareScrollView style={styles.container} contentContainerStyle={{flexGrow:1}}>
+                {/* Allows to dismiss keyboard when screen is clicked */}
 				<TouchableWithoutFeedback onPress={Keyboard.dismiss}>
 					<View style={styles.inner}>
 						<SignInLogo style={styles.logo} />
 						<View style={styles.loginContainer}>
+                            {/* Input Fields */}
 							<CredInput
 								onChangeText={this.onChangeUsername}
 								value={this.state.userInputs.username}
@@ -88,11 +105,17 @@ class SignInScreen extends Component {
 								autoCompleteType="password"
 								secureTextEntry={true}
 							/>
-                            
-							<SubmitButton style={styles.submitBtn} title="log in" backgroundColor={Colors.btnColor} />
+                           
+                            {/* Logging In */}
+							<SubmitButton style={styles.submitBtn} title="Log In" backgroundColor={Colors.btnColor} onPress={this.onLogIn} />
 
+                            {/* Go to Sign Up Page */}
 							<Text style={styles.question}>Don't have an account yet?</Text>
-							<MinorButton title="Sign Up" color={Colors.btnColor} style={styles.submitBtn} />
+							<MinorButton title="Sign Up" color={Colors.btnColor} style={styles.minorBtn} onPress={this.onSignUpNavigate} />
+
+                            {/* Go to Forgot Password Page */}
+							<MinorButton title="Forgot Password?" color={Colors.logoLabelColor} style={styles.minorBtn} onPress={this.onForgotPassword} />
+
 						</View>
 					</View>
 				</TouchableWithoutFeedback>
@@ -106,11 +129,9 @@ const styles = StyleSheet.create({
 		backgroundColor: Colors.logoColor,
 	},
 	inner: {
+        flex: 1,
         padding: 24,
-        flex:1,
-		justifyContent: 'flex-start',
-		alignItems: 'center',
-		// backgroundColor: Colors.customBlack,
+        alignItems: 'center',
 	},
 	logo: {
 		marginVertical: 50,
@@ -129,7 +150,10 @@ const styles = StyleSheet.create({
 		color: Colors.customWhite,
 		fontSize: FontSizes.minorText,
 		fontFamily: 'mont-alt-regular',
-	},
+    },
+    minorBtn: {
+        marginVertical: 15,
+    }
 });
 
 export default SignInScreen;

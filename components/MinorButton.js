@@ -10,8 +10,8 @@ import FontSizes from '../constants/fontSizes';
  */
 const MinorButton = (props) => (
 	<TouchableOpacity onPress={props.onPress}>
-		<View style={{borderBottomWidth: 1, borderBottomColor: props.color,}}>
-			<Text style={{ ...styles.btn, color: props.color, ...props.style }}>
+		<View style={{borderBottomWidth: 1, borderBottomColor: props.color, ...props.style}}>
+			<Text style={{ ...styles.btn, color: props.color, }}>
 				{props.title}
 			</Text>
 		</View>

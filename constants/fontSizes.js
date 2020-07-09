@@ -11,5 +11,5 @@ export default {
   credText: 17,
 
   //minor text
-  minorText: 17,
+  minorText: 19,
 };
