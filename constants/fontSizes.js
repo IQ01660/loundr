@@ -6,5 +6,10 @@
 export default {
   //header title font size
   headerTitle: 23,
-  credText: 15,
+
+  //the input field font size
+  credText: 17,
+
+  //minor text
+  minorText: 19,
 };

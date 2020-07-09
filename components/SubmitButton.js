@@ -1,43 +1,41 @@
-import React from "react";
-import {
-  StyleSheet,
-  Button,
-  View,
-  SafeAreaView,
-  Text,
-  Alert,
-} from "react-native";
-import Constants from "expo-constants";
+import React from 'react';
+import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 
-function Separator() {
-  return <View style={styles.separator} />;
-}
+import Colors from '../constants/colors';
+import FontSizes from '../constants/fontSizes';
 
-export default function App() {
-  return (
-    <SafeAreaView style={styles.container}>
-      <Button title="Press me" onPress={() => Alert.alert("Pressed")} />
-    </SafeAreaView>
-  );
-}
+/**
+ * Accepts a title, an onPress, and a backgroundColor prop.
+ * As well as a style prop.
+ * Takes the whole width of the container.
+ * @param {*} props 
+ */
+const SubmitButton = (props) => (
+    <TouchableOpacity style={{width: '100%'}} activeOpacity={0.8} onPress={props.onPress} >
+        <View style={ {...styles.button, backgroundColor: props.backgroundColor, ...props.style} } >
+            <Text style={styles.title}>{props.title}</Text>
+        </View>
+    </TouchableOpacity>
+);
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    marginTop: Constants.statusBarHeight,
-    marginHorizontal: 16,
-  },
-  title: {
-    textAlign: "center",
-    marginVertical: 8,
-  },
-  fixToText: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-  },
-  separator: {
-    marginVertical: 8,
-    borderBottomColor: "#737373",
-    borderBottomWidth: StyleSheet.hairlineWidth,
-  },
+    button: {
+        width: '100%',
+        
+        borderColor: Colors.btnColor,
+        borderWidth: 1,
+        borderRadius: 30,
+        alignItems: 'center',
+        justifyContent: 'center',
+        paddingHorizontal: 10,
+        paddingVertical: 10,
+
+    },
+    title: {
+        fontFamily: 'mont-alt-regular',
+        fontSize: FontSizes.headerTitle,
+        color: Colors.customWhite,
+    },
 });
+
+export default SubmitButton;
