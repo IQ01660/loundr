@@ -15,10 +15,6 @@ export default {
   //can be good for backgrounds of the screens
   screenColor: "#441299",
 
-  //color for placeHolders (e.g. in TextInputs)
-  //it is a dark grey color
-  placeHolderColor: "#737275",
-
   //currently black color
   //can be mainly used for basic texts
   customBlack: "#000000",
@@ -26,4 +22,8 @@ export default {
   //currently white color
   //use cases: general
   customWhite: "#ffffff",
+
+  //button color (bright aquamarine)
+  btnColor: '#109c95',
+
 };
