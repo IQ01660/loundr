@@ -7,6 +7,9 @@ import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view
 //constants
 import Colors from '../../../constants/colors';
 import FontSizes from '../../../constants/fontSizes';
+import checkEmail from '../../../constants/checkEmail';
+
+const MIN_PASS_LENGTH = 8;
 
 //components
 import SignInLogo from '../../../components/Auth/SignInLogo';
@@ -16,7 +19,6 @@ import MinorButton from '../../../components/MinorButton';
 import ErrorMessage from '../../../components/Auth/ErrorMessage';
 
 class SignInScreen extends Component {
-	static navigationOptions = {};
 
 	state = {
 		//contains the values entered in the input fields
@@ -27,7 +29,6 @@ class SignInScreen extends Component {
 			username: '',
 			password: '',
 			confirmPass: '',
-			phone: '',
 		},
 	};
 
@@ -40,7 +41,8 @@ class SignInScreen extends Component {
 	onChangeInput = (inputName, value) => {
 		this.setState((prevState) => {
 			const inputsCopy = { ...prevState.userInputs };
-			inputsCopy[inputName] = value;
+            inputsCopy[inputName] = value;
+
 			return {
 				userInputs: inputsCopy,
 			};
@@ -50,7 +52,34 @@ class SignInScreen extends Component {
 	/**
 	 * called when "Sign Up" is clicked
 	 */
-	onSignUp = () => {};
+	onSignUp = () => {
+        /**
+         * Final check of entries
+         */
+        //if any of the fields are empty
+        Object.keys(this.state.userInputs).forEach(key => {
+            if (!this.state.userInputs[key]) {
+                return;
+            }
+        });
+        //if email has a wrong form
+        if (!checkEmail(this.state.userInputs.email)) 
+        {
+            return;
+        }
+        //if the password length is less than minimum allowed
+        if (this.state.userInputs.password.length < MIN_PASS_LENGTH)
+        {
+            return;
+        }
+        //if passwords do not match
+        if (this.state.userInputs.password !== this.state.userInputs.confirmPass)
+        {
+            return;
+        }
+
+        this.props.navigation.navigate('ConfirmEmail');
+    };
 
 	/**
 	 * navigating to sign up page
@@ -60,14 +89,29 @@ class SignInScreen extends Component {
 	};
 
 	render() {
+
+        // a message to return if some fields are empty
+        let overallErrorMessage = null;
+
+        Object.keys(this.state.userInputs).forEach(key => {
+            if (!this.state.userInputs[key]) {
+                overallErrorMessage = <ErrorMessage>You must fill in all of the fields</ErrorMessage>;
+            }
+        });
+
 		return (
-			// ****** IT IS IMPORTANT TO HAVE flexGrow: 1 HERE ******
+            // ****** IT IS IMPORTANT TO HAVE flexGrow: 1 HERE ******
+            //do extraHeight={200} if need extra offset from keyboard
 			<KeyboardAwareScrollView style={styles.container} contentContainerStyle={{ flexGrow: 1 }}>
 				{/* Allows to dismiss keyboard when screen is clicked */}
 				<TouchableWithoutFeedback onPress={Keyboard.dismiss}>
 					<View style={styles.inner}>
 						<SignInLogo style={styles.logo} />
 						<View style={styles.loginContainer}>
+
+                            {/* Checking if any fields are empty */}
+                            {overallErrorMessage}
+
 							{/* Input Fields */}
 							<CredInput
 								onChangeText={(name) => this.onChangeInput('name', name)}
@@ -85,6 +129,12 @@ class SignInScreen extends Component {
 								autoCompleteType="name"
 								secureTextEntry={false}
 							/>
+
+                            {/* Checking Email's form */}
+                            {checkEmail(this.state.userInputs.email) ? null : (
+                                <ErrorMessage>Invalid email form</ErrorMessage>
+                            )}
+
 							<CredInput
 								onChangeText={(email) => this.onChangeInput('email', email)}
 								value={this.state.userInputs.email}
@@ -101,8 +151,8 @@ class SignInScreen extends Component {
 								autoCompleteType="username"
 								secureTextEntry={false}
 							/>
-
-							{this.state.userInputs.password.length < 8 ? <ErrorMessage>Password must be at least 8 characters long</ErrorMessage> : null}
+                            {/* Password Potential Error Message */}
+							{this.state.userInputs.password.length < MIN_PASS_LENGTH ? <ErrorMessage>Password must be at least {MIN_PASS_LENGTH} characters long</ErrorMessage> : null}
 
 							<CredInput
 								onChangeText={(password) => this.onChangeInput('password', password)}
@@ -112,6 +162,7 @@ class SignInScreen extends Component {
 								autoCompleteType="password"
 								secureTextEntry={true}
 							/>
+                            {/* Confirm Pass Potential Error Message */}
                             {this.state.userInputs.password !== this.state.userInputs.confirmPass ? <ErrorMessage>Passwords do not match</ErrorMessage> : null}
 
 							<CredInput
@@ -132,7 +183,7 @@ class SignInScreen extends Component {
 							/>
 
 							{/* Go to Sign In Page */}
-							<Text style={styles.question}>Don't have an account yet?</Text>
+							<Text style={styles.question}>Already have an account?</Text>
 							<MinorButton
 								title="Sign In"
 								color={Colors.btnColor}

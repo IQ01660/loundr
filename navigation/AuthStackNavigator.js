@@ -4,35 +4,21 @@
 
 import { createStackNavigator } from "react-navigation-stack";
 
-//constants
-import Colors from "../constants/colors";
-import FontSizes from "../constants/fontSizes";
-
 //importing screens
 import SignInScreen from "../screens/Authentication/SignIn/SignInScreen";
-import SignUpScreen from "../screens/Authentication/SignUp/SignUpScreen";
+
+//other navigators
+import SignUpStackNavigator from './SignUpStackNavigator';
 
 const AuthStackNavigator = createStackNavigator(
   {
     SignIn: SignInScreen,
-    SignUp: SignUpScreen,
+    SignUp: SignUpStackNavigator,
   },
   {
     initialRouteName: "SignIn",
     defaultNavigationOptions: {
       headerShown: false,
-      headerStyle: {
-        backgroundColor: Colors.logoColor,
-        shadowOffset: {
-          height: 0,
-          width: 0,
-        },
-      },
-      headerTintColor: Colors.customWhite,
-      headerTitleStyle: {
-        fontFamily: "mont-alt-bold",
-        fontSize: FontSizes.headerTitle,
-      },
     },
   }
 );

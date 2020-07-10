@@ -4,7 +4,6 @@ import { View, Text, StyleSheet } from 'react-native';
 //constants
 import Colors from '../../constants/colors';
 import FontSizes from '../../constants/fontSizes';
-import fontSizes from '../../constants/fontSizes';
 
 /**
  * Can be used when displaying errors
