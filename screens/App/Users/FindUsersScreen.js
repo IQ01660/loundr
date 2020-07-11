@@ -1,12 +1,12 @@
 import React, { Component } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 
-class MyProfileScreen extends Component
+class FindUsersScreen extends Component
 {
     render() {
         return (
             <View>
-                <Text>My Profile</Text>
+                <Text>I can look for users here!</Text>
             </View>
         );
     }
@@ -16,4 +16,4 @@ const styles = StyleSheet.create({
 
 });
 
-export default MyProfileScreen;
+export default FindUsersScreen;

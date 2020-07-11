@@ -8,7 +8,7 @@ import { createStackNavigator } from "react-navigation-stack";
 import SignInScreen from "../screens/Authentication/SignIn/SignInScreen";
 
 //other navigators
-import SignUpStackNavigator from './SignUpStackNavigator';
+import SignUpStackNavigator from './Auth/SignUpStackNavigator';
 
 const AuthStackNavigator = createStackNavigator(
   {
