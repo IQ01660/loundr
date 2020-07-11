@@ -5,6 +5,7 @@ import { createAppContainer, createSwitchNavigator } from 'react-navigation';
 
 //importing other navigators
 import AuthStackNavigator from './AuthStackNavigator';
+import AppTabNavigator from './AppTabNavigator';
 
 /**
  * Naming conventions:
@@ -20,7 +21,8 @@ import AuthStackNavigator from './AuthStackNavigator';
  */
 const EntrySwitchNavigator = createSwitchNavigator(
     {
-        Auth: AuthStackNavigator
+        Auth: AuthStackNavigator,
+        App: AppTabNavigator,
     },
     {
         initialRouteName: 'Auth',

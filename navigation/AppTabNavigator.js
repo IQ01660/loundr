@@ -12,10 +12,13 @@ import FriendsScreen from '../screens/App/Users/FriendsScreen';
 
 const AppTabNavigator = createBottomTabNavigator(
     {
-        
+        MyProfile: MyProfileScreen,
+        FindUsers: FindUsersScreen,
+        Friends: FriendsScreen,
     },
     {
-
+        initialRouteName: 'MyProfile',
     },
 );
  
+export default AppTabNavigator
