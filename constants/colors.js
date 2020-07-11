@@ -29,4 +29,10 @@ export default {
   //button color (bright aquamarine)
   btnColor: '#109c95',
 
+  //color of the error message containers
+  errorContainer: '#fae366',
+
+  //color of the error message text
+  errorMessage: '#ad1507',
+
 };

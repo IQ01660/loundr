@@ -1,19 +1,17 @@
 import React, { Component } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 
-class MyProfileScreen extends Component
+class ConfirmEmailScreen extends Component
 {
     render() {
         return (
             <View>
-                <Text>My Profile</Text>
+                <Text>Confirm Email Screen!!</Text>
             </View>
         );
     }
 }
 
-const styles = StyleSheet.create({
+const styles = StyleSheet.create({});
 
-});
-
-export default MyProfileScreen;
+export default ConfirmEmailScreen;
