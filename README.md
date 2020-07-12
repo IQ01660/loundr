@@ -33,6 +33,14 @@ Visit the official [Expo docs](https://docs.expo.io/get-started/installation/) f
 (Note: you cannot use an iOS simulator if you are not using a Mac; nevertheless, I have heard there are ways one could do it)
 
 ### Running the program
+First make sure to do the following:
+```bash
+cd node_modules
+cd react-native-credit-card-input
+npx react-codemod rename-unsafe-lifecycles
+```
+This should update some deprecated lifecycle methods in react-native-credit-card-input package
+
 If you fork the repo and then pull it you can go into the project folder and
 ```bash
 expo start
