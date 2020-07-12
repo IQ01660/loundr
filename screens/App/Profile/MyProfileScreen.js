@@ -14,10 +14,10 @@ import Avatar from '../../../components/Avatar';
 import Colors from '../../../constants/colors';
 import FontSizes from '../../../constants/fontSizes';
 const AVATAR_WIDTH_HEIGHT = 80; // the profile photo's side length (for borderRadius and uri photos)
+const CENTRAL_PANEL_WIDTH = '75%'
 
 class MyProfileScreen extends Component {
 	state = {
-        //
 		avatarSource: require('../../../assets/avatar.png'),
 	};
 
@@ -94,22 +94,32 @@ class MyProfileScreen extends Component {
 						onPress={this.openImagePickerAsync}
 					/>
 				</View>
-			</CustomScrollView>
+                <View style={styles.options}>
+
+                </View>
+        	</CustomScrollView>
 		);
 	}
 }
 
 const styles = StyleSheet.create({
-	container: {},
+	container: {
+        alignItems: 'center',
+    },
 	photoPickerContainer: {
-		alignItems: 'center',
+        width: CENTRAL_PANEL_WIDTH,
+        alignItems: 'center',
+        backgroundColor: 'yellow',
 	},
 	imageContainer: {
 		width: AVATAR_WIDTH_HEIGHT,
 		height: AVATAR_WIDTH_HEIGHT,
 		marginVertical: 30,
 	},
-	pickPhotoBtn: {},
+    options: {
+        width: CENTRAL_PANEL_WIDTH,
+        backgroundColor: 'purple',
+    }
 });
 
 export default MyProfileScreen;
