@@ -9,16 +9,18 @@ import * as FileSystem from 'expo-file-system';
 import CustomScrollView from '../../../components/CustomScrollView';
 import MinorButton from '../../../components/MinorButton';
 import Avatar from '../../../components/Avatar';
+import OptionsButton from '../../../components/OptionsButton';
 
 //constants
 import Colors from '../../../constants/colors';
 import FontSizes from '../../../constants/fontSizes';
+const DEFAULT_AVATAR_PATH = '../../../assets/avatar.jpg'
 const AVATAR_WIDTH_HEIGHT = 80; // the profile photo's side length (for borderRadius and uri photos)
-const CENTRAL_PANEL_WIDTH = '75%'
+const CENTRAL_PANEL_WIDTH = '100%'
 
 class MyProfileScreen extends Component {
 	state = {
-		avatarSource: require('../../../assets/avatar.png'),
+		avatarSource: require(DEFAULT_AVATAR_PATH),
 	};
 
     /**
@@ -72,14 +74,14 @@ class MyProfileScreen extends Component {
         catch(err) {
             console.log(err);
             this.setState({
-                avatarSource: require('../../../assets/avatar.png'),
+                avatarSource: require(DEFAULT_AVATAR_PATH),
             });
         }
     };
 
 	render() {
 		return (
-			<CustomScrollView backgroundColor={Colors.customWhite} style={styles.container}>
+			<CustomScrollView backgroundColor={Colors.backgroundGrey} style={styles.container}>
                 {/* container for the photo picking stuff */}
 				<View style={styles.photoPickerContainer}>
                     {/* the avatar container */}
@@ -95,7 +97,10 @@ class MyProfileScreen extends Component {
 					/>
 				</View>
                 <View style={styles.options}>
-
+                    <OptionsButton iconName="credit-card" title="Payment Methods" />
+                    <OptionsButton iconName="lock" title="Privacy" />
+                    <OptionsButton iconName="user" title="Edit Profile" />
+                    <OptionsButton iconName="sign-out" title="Sign Out" isLast />
                 </View>
         	</CustomScrollView>
 		);
@@ -109,7 +114,6 @@ const styles = StyleSheet.create({
 	photoPickerContainer: {
         width: CENTRAL_PANEL_WIDTH,
         alignItems: 'center',
-        backgroundColor: 'yellow',
 	},
 	imageContainer: {
 		width: AVATAR_WIDTH_HEIGHT,
@@ -118,7 +122,12 @@ const styles = StyleSheet.create({
 	},
     options: {
         width: CENTRAL_PANEL_WIDTH,
-        backgroundColor: 'purple',
+        backgroundColor: Colors.customWhite,
+        marginVertical: 30,
+        borderBottomWidth: 1,
+        borderBottomColor: Colors.placeHolderColor,
+        borderTopWidth: 1,
+        borderTopColor: Colors.placeHolderColor,
     }
 });
 

@@ -26,6 +26,9 @@ export default {
   //color for text input placeholders
   placeHolderColor: '#bfbfbf',
 
+  //light greyish white color for background colors of screens
+  backgroundGrey: '#f2f2f7',
+
   //button color (bright aquamarine)
   btnColor: '#109c95',
 
