@@ -97,7 +97,9 @@ class MyProfileScreen extends Component {
 					/>
 				</View>
                 <View style={styles.options}>
-                    <OptionsButton iconName="credit-card" title="Payment Methods" />
+                    <OptionsButton iconName="credit-card" title="Payment Methods" onPress={() => {
+                        this.props.navigation.navigate('PaymentMethods')
+                    }}/>
                     <OptionsButton iconName="lock" title="Privacy" />
                     <OptionsButton iconName="user" title="Edit Profile" />
                     <OptionsButton iconName="sign-out" title="Sign Out" isLast />
