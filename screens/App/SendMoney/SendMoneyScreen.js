@@ -7,7 +7,7 @@ class SendMoneyScreen extends Component
     {
         return (
             <View style={styles.screen} >
-                <Text>SendMoneyScreen!</Text>
+                <Text>Send Money Screen!</Text>
             </View>
         );
     }

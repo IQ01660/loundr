@@ -4,12 +4,15 @@
  */
 
 export default {
-  //header title font size
-  headerTitle: 23,
+	//header title font size
+	headerTitle: 23,
 
-  //the input field font size
-  credText: 17,
+	//the input field font size
+	credText: 17,
 
-  //minor text
-  minorText: 19,
+	//minor text
+	minorText: 19,
+
+    //tab's icon size
+    tabIcon: 35,
 };

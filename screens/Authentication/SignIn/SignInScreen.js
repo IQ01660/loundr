@@ -59,7 +59,9 @@ class SignInScreen extends Component {
 	/**
 	 * called when "Sign In" is clicked
 	 */
-	onSignIn = () => {};
+	onSignIn = () => {
+        this.props.navigation.navigate('ProfileStack');
+    };
 
 	/**
 	 * navigating to SignUp page
