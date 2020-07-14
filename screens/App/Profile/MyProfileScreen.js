@@ -4,17 +4,26 @@ import { StyleSheet, View, Alert } from 'react-native';
 //outside imports
 import * as ImagePicker from 'expo-image-picker';
 import * as FileSystem from 'expo-file-system';
-import { RNS3 } from 'react-native-aws3';
+//firebase setup
+import * as firebase from 'firebase';
+import 'firebase/analytics';
+import 'firebase/database';
+import 'firebase/firestore';
+import 'firebase/auth';
 
-const options = {
-	keyPrefix: 'uploads/',
-	bucket: 'loundr-images',
-	region: 'us-east-2',
-	accessKey: 'AKIAJURMZG7RVDDU2MFA',
-	secretKey: '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',
-	successActionStatus: 201,
+var firebaseConfig = {
+	apiKey: 'AIzaSyABE5CrAEQivDkyppNM3f_2iw13IiV053c',
+	authDomain: 'loundr-fced9.firebaseapp.com',
+	databaseURL: 'https://loundr-fced9.firebaseio.com',
+	projectId: 'loundr-fced9',
+	storageBucket: 'loundr-fced9.appspot.com',
+	messagingSenderId: '28905429703',
+	appId: '1:28905429703:web:1cc5160bd2b907759d3ce2',
+	measurementId: 'G-BMV4TW6QFQ',
 };
-
+// Initialize Firebase
+firebase.initializeApp(firebaseConfig);
+firebase.analytics();
 
 //components
 import CustomScrollView from '../../../components/CustomScrollView';
@@ -69,16 +78,7 @@ class MyProfileScreen extends Component {
 			await FileSystem.moveAsync({
 				from: pickerResult.uri,
 				to: permanentFilePath,
-            });
-
-            console.log(permanentFilePath);
-            
-            const file = {
-                // uri can also be a file system path (i.e. file://)
-                uri: permanentFilePath,
-                name: "ikram-profile-0.png",
-                type: "image/png"
-            }
+			});
 
 			//update the state and the DB (later)
 			this.setState({
@@ -94,10 +94,14 @@ class MyProfileScreen extends Component {
 			this.setState({
 				avatarSource: require(DEFAULT_AVATAR_PATH),
 			});
-        }
-        
-        
+		}
 	};
+
+    storeHighScore = (userId, score) => {
+        firebase.database().ref('users/' + userId).set({
+          highscore: score
+        });
+    }
 
 	render() {
 		return (
@@ -126,7 +130,9 @@ class MyProfileScreen extends Component {
 					/>
 					<OptionsButton iconName="lock" title="Privacy" />
 					<OptionsButton iconName="user" title="Edit Profile" />
-					<OptionsButton iconName="sign-out" title="Sign Out" isLast />
+					<OptionsButton iconName="sign-out" title="Sign Out" isLast 
+                        onPress={() => this.storeHighScore(4, 210)}
+                    />
 				</View>
 			</CustomScrollView>
 		);
