@@ -10,7 +10,7 @@ import EntryNavigator from './navigation/EntryNavigator';
 import { AppLoading } from 'expo';
 
 //importing font package
-import * as Font from 'expo-font';
+import * as Font from 'expo-font'
 
 /**
  * fetches all fonts;
@@ -29,6 +29,7 @@ const fetchFonts = () => {
 		'mont-alt-bold': require('./assets/fonts/MontserratAlternates-Bold.ttf'),
 	});
 };
+
 
 /**
  * Here we will have the main SwitchNavigator rendered
