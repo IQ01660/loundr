@@ -20,7 +20,9 @@ const CENTRAL_PANEL_WIDTH = '100%';
 class MyProfileScreen extends Component {
 	state = {
         avatarSource: require(DEFAULT_AVATAR_PATH),
-	};
+    };
+    
+
 
 	/**
 	 * handling the click "Pick a photo"

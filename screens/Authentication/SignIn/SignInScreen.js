@@ -4,6 +4,9 @@ import { StyleSheet, View, Text, TouchableWithoutFeedback, Keyboard, Alert } fro
 //imports from outside
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 
+//firebase stuff
+import * as firebase from 'firebase';
+
 //constants
 import Colors from '../../../constants/colors';
 import FontSizes from '../../../constants/fontSizes';
@@ -13,6 +16,7 @@ import SignInLogo from '../../../components/Auth/SignInLogo';
 import CredInput from '../../../components/Auth/CredInput';
 import SubmitButton from '../../../components/SubmitButton';
 import MinorButton from '../../../components/MinorButton';
+import ErrorMessage from '../../../components/Auth/ErrorMessage';
 
 class SignInScreen extends Component {
 	static navigationOptions = {};
@@ -20,21 +24,22 @@ class SignInScreen extends Component {
 	state = {
 		//contains the values entered of the input fields
 		userInputs: {
-			username: '',
-			password: '',
-		},
+			email: '',
+            password: '',
+        },
+        hasIncorrectCredentials: false,
 	};
 	/**
 	 * updates the state by changing the
 	 * username the user entered
 	 * @param {*} username - the updated username
 	 */
-	onChangeUsername = (username) => {
+	onChangeEmail = (email) => {
 		this.setState((prevState) => {
 			return {
 				userInputs: {
 					...prevState.userInputs,
-					username: username,
+					email: email,
 				},
 			};
 		});
@@ -60,17 +65,40 @@ class SignInScreen extends Component {
 	 * called when "Sign In" is clicked
 	 */
 	onSignIn = () => {
-        this.props.navigation.navigate('ProfileStack');
-    };
+		firebase
+			.auth()
+            .signInWithEmailAndPassword(this.state.userInputs.email, this.state.userInputs.password)
+            .then(() => {
+                if (!firebase.auth().currentUser.emailVerified)
+                {
+                    throw {msg: "Verify email first"};
+                }
+            })
+            .then(() => {
+                return this.setState({
+                    hasIncorrectCredentials: false,
+                });
+            })
+			.then(() => {
+				this.props.navigation.navigate('MyProfile', {
+					user: firebase.auth().currentUser,
+				});
+            }).
+            catch(err => {
+                this.setState({
+                    hasIncorrectCredentials: true,
+                });
+            });
+	};
 
 	/**
 	 * navigating to SignUp page
 	 */
 	onSignUpNavigate = () => {
-        this.props.navigation.navigate('SignUp');
-    };
-    
-    /**
+		this.props.navigation.navigate('SignUp');
+	};
+
+	/**
 	 * navigating to forgot password screen
 	 */
 	onForgotPassword = () => {};
@@ -85,13 +113,16 @@ class SignInScreen extends Component {
 						<SignInLogo style={styles.logo} />
 
 						<View style={styles.loginContainer}>
+                            {/* Potential Error Message */}
+                            {this.state.hasIncorrectCredentials ? <ErrorMessage>Incorrect email or password</ErrorMessage> : null}
+
 							{/* Input Fields */}
 							<CredInput
-								onChangeText={this.onChangeUsername}
-								value={this.state.userInputs.username}
+								onChangeText={this.onChangeEmail}
+								value={this.state.userInputs.email}
 								style={styles.input}
-								placeholder="username..."
-								autoCompleteType="username"
+								placeholder="email..."
+								autoCompleteType="email"
 								secureTextEntry={false}
 							/>
 							<CredInput
@@ -119,7 +150,7 @@ class SignInScreen extends Component {
 								style={styles.minorBtn}
 								onPress={this.onSignUpNavigate}
 							/>
-                            <MinorButton
+							<MinorButton
 								title="Forgot password"
 								color={Colors.logoLabelColor}
 								style={styles.minorBtn}

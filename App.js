@@ -53,7 +53,7 @@ class App extends Component {
 		//checks if fonts loaded
         fontsLoaded: false,
 	};
-
+    
 	render() {
 		/**
 		 * render AppLoading screen if
