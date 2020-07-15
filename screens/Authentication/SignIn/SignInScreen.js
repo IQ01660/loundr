@@ -8,6 +8,14 @@ import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view
 import Colors from '../../../constants/colors';
 import FontSizes from '../../../constants/fontSizes';
 
+import firebase from 'firebase';
+
+const doSomeShit = () => {
+    firebase.database().ref('shit/' + Math.floor(Math.random()*10000)).set({
+        shitty: Math.random() * 100,
+    });
+};
+
 //components
 import SignInLogo from '../../../components/Auth/SignInLogo';
 import CredInput from '../../../components/Auth/CredInput';
@@ -67,7 +75,8 @@ class SignInScreen extends Component {
 	 * navigating to SignUp page
 	 */
 	onSignUpNavigate = () => {
-		this.props.navigation.navigate('SignUp');
+        // this.props.navigation.navigate('SignUp');
+        doSomeShit();
     };
     
     /**
