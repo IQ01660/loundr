@@ -5,8 +5,6 @@ import { StyleSheet, View, Alert, Text } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import * as FileSystem from 'expo-file-system';
 
-import firebase from '../../../Firebase';
-
 //components
 import CustomScrollView from '../../../components/CustomScrollView';
 import MinorButton from '../../../components/MinorButton';
@@ -22,7 +20,6 @@ const CENTRAL_PANEL_WIDTH = '100%';
 class MyProfileScreen extends Component {
 	state = {
         avatarSource: require(DEFAULT_AVATAR_PATH),
-        msg: '',
 	};
 
 	/**
@@ -79,14 +76,6 @@ class MyProfileScreen extends Component {
 		}
 	};
 
-	componentDidMount() {
-		firebase.database().ref('/shit/70').once('value').then(snapshot => {
-            this.setState({
-                msg: snapshot.val().shitty,
-            });
-        });
-	}
-
 	render() {
 		return (
 			<CustomScrollView backgroundColor={Colors.backgroundGrey} style={styles.container}>
@@ -115,7 +104,6 @@ class MyProfileScreen extends Component {
 					<OptionsButton iconName="lock" title="Privacy" />
 					<OptionsButton iconName="user" title="Edit Profile" />
 					<OptionsButton iconName="sign-out" title="Sign Out" isLast />
-                    <Text>{this.state.msg}</Text>
 				</View>
 			</CustomScrollView>
 		);
