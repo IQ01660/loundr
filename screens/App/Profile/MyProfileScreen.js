@@ -4,6 +4,8 @@ import { StyleSheet, View, Alert, Text } from 'react-native';
 //outside imports
 import * as ImagePicker from 'expo-image-picker';
 import * as FileSystem from 'expo-file-system';
+import * as firebase from 'firebase';
+import "firebase/auth";
 
 //components
 import CustomScrollView from '../../../components/CustomScrollView';
@@ -19,10 +21,8 @@ const CENTRAL_PANEL_WIDTH = '100%';
 
 class MyProfileScreen extends Component {
 	state = {
-        avatarSource: require(DEFAULT_AVATAR_PATH),
-    };
-    
-
+		avatarSource: require(DEFAULT_AVATAR_PATH),
+	};
 
 	/**
 	 * handling the click "Pick a photo"
@@ -105,7 +105,12 @@ class MyProfileScreen extends Component {
 					/>
 					<OptionsButton iconName="lock" title="Privacy" />
 					<OptionsButton iconName="user" title="Edit Profile" />
-					<OptionsButton iconName="sign-out" title="Sign Out" isLast />
+					<OptionsButton iconName="sign-out" title="Sign Out" isLast onPress={() => {
+                        firebase.auth().signOut()
+                            .then(() => {
+                                return this.props.navigation.navigate('SignIn');
+                            })
+                    }} />
 				</View>
 			</CustomScrollView>
 		);

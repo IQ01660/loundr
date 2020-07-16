@@ -9,20 +9,22 @@ import SubmitButton from '../../../components/SubmitButton';
 import Colors from '../../../constants/colors';
 
 class ConfirmEmailScreen extends Component {
-    onSignIn = () => {
-        this.props.navigation.navigate('SignIn');
-    };
+	onNext = () => {
+		this.props.navigation.navigate('EnterPhone', {
+			user: this.props.navigation.getParam('user'),
+		});
+	};
 
 	render() {
 		return (
 			<CustomScrollView backgroundColor={Colors.logoColor} style={styles.container}>
 				<View style={styles.inner}>
-					<Text style={styles.title}>Please confirm your email before going to the Sign In page</Text>
+					<Text style={styles.title}>Please confirm your email before continuing</Text>
 					<SubmitButton
 						style={styles.submitBtn}
-						title="Sign In Page"
+						title="Next"
 						backgroundColor={Colors.btnColor}
-						onPress={this.onSignIn}
+						onPress={this.onNext}
 					/>
 				</View>
 			</CustomScrollView>
@@ -32,8 +34,8 @@ class ConfirmEmailScreen extends Component {
 
 const styles = StyleSheet.create({
 	container: {
-        alignItems: 'center',
-    },
+		alignItems: 'center',
+	},
 	inner: {
 		flex: 1,
 		width: '82%',
@@ -42,10 +44,10 @@ const styles = StyleSheet.create({
 	},
 	title: {
 		color: Colors.customWhite,
-    },
-    submitBtn: {
-        marginVertical: 15,
-    },
+	},
+	submitBtn: {
+		marginVertical: 15,
+	},
 });
 
 export default ConfirmEmailScreen;

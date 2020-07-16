@@ -59,7 +59,7 @@ class SignInScreen extends Component {
 				},
 			};
 		});
-	};
+    };
 
 	/**
 	 * called when "Sign In" is clicked

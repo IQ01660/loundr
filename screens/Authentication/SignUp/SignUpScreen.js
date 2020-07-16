@@ -23,7 +23,7 @@ import ErrorMessage from '../../../components/Auth/ErrorMessage';
 
 class SignInScreen extends Component {
 	state = {
-        hasIncorrectCredentials: false,
+		hasIncorrectCredentials: false,
 		//contains the values entered in the input fields
 		userInputs: {
 			name: '',
@@ -81,32 +81,37 @@ class SignInScreen extends Component {
 		//adding this user to firebase authentification
 		firebase
 			.auth()
-            .createUserWithEmailAndPassword(this.state.userInputs.email, this.state.userInputs.password)
+			.createUserWithEmailAndPassword(this.state.userInputs.email, this.state.userInputs.password)
 			.then(() => {
-                const user = firebase.auth().currentUser;
-                return user.updateProfile({
-                    displayName: this.state.userInputs.name + ' ' + this.state.userInputs.surname,
-                });
-            })
-            .then(() => {
-                if (!firebase.auth().currentUser.emailVerified)
-                {
-                    return firebase.auth().currentUser.sendEmailVerification();
-                }
-            })
-            .then(() => {
-                return this.setState({
-                    hasIncorrectCredentials: false,
-                });
-            })
-            .then(() => {
-                this.props.navigation.navigate('ConfirmEmail');
-            })
+				const user = firebase.auth().currentUser;
+				return user.updateProfile({
+					displayName: this.state.userInputs.name + ' ' + this.state.userInputs.surname,
+				});
+			})
+			.then(() => {
+				if (!firebase.auth().currentUser.emailVerified) {
+					return firebase.auth().currentUser.sendEmailVerification();
+				}
+			})
+			.then(() => {
+				return this.setState({
+					hasIncorrectCredentials: false,
+				});
+			})
+			.then(() => {
+				this.props.navigation.navigate('ConfirmEmail', {
+					user: {
+						email: this.state.userInputs.email,
+						password: this.state.userInputs.password,
+                        username: this.state.userInputs.username,
+					},
+				});
+			})
 			.catch((err) => {
-                this.setState({
-                    hasIncorrectCredentials: true,
-                });
-            });
+				this.setState({
+					hasIncorrectCredentials: true,
+				});
+			});
 	};
 
 	/**
@@ -135,8 +140,9 @@ class SignInScreen extends Component {
 					<View style={styles.inner}>
 						<SignInLogo style={styles.logo} />
 						<View style={styles.loginContainer}>
-
-                            {this.state.hasIncorrectCredentials ? <ErrorMessage>A user with this email already exists</ErrorMessage> : null}
+							{this.state.hasIncorrectCredentials ? (
+								<ErrorMessage>A user with this email already exists</ErrorMessage>
+							) : null}
 
 							{/* Checking if any fields are empty */}
 							{overallErrorMessage}

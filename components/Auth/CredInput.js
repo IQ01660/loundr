@@ -17,6 +17,7 @@ export default function CredInput(props) {
 
 	return (
 		<TextInput
+            {...props}
 			onChangeText={props.onChangeText}
 			value={props.value}
 			style={{ ...styles.input, ...props.style, borderColor: borderColor, borderWidth: borderWidth }}
