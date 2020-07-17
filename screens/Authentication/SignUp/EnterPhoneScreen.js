@@ -25,6 +25,7 @@ class EnterPhoneScreen extends Component {
 
 	state = {
 		hasIncorrectCred: false,
+		didManyRequests: false,
 		phone: '',
 	};
 
@@ -34,64 +35,89 @@ class EnterPhoneScreen extends Component {
 		});
 	};
 
+    /**
+     * sending the verification code
+     * and checking if this phone entered was registered before
+     */
 	onSendCode = async () => {
 		const phoneProvider = new firebase.auth.PhoneAuthProvider();
 		const phoneNumber = this.state.phone;
 
 		try {
-			const verificationId = await phoneProvider.verifyPhoneNumber(phoneNumber, this.recaptchaRef.current);
-
+            const verificationId = await phoneProvider.verifyPhoneNumber(phoneNumber, this.recaptchaRef.current);
+            
 			firebase
 				.database()
-				.ref('users')
-                .once('value')
+				.ref('usersPublic')
+				.once('value')
 				.then((snapshot) => {
-                    console.log("CHECKING IF PHONE ALREADY IS REGISTERED");
-                    if (snapshot.val() === null)
-                    {
-                        return;
-                    }
+					console.log('CHECKING IF PHONE ALREADY IS REGISTERED');
 
+					//if no users in usersPublic no need for the check
+					if (snapshot.val() === null) {
+						return;
+					}
+
+					//otherwise go through every $uid
 					return snapshot.forEach((childSnapshot) => {
+						//check if any $uid has their phoneNumber equal to the one entered
 						if (childSnapshot.phoneNumber === this.state.phone) {
+							//if yes go to closest catch and update state - hasIncorectCred
 							throw { msg: 'this phone number exists' };
 						}
 					});
-                }, (err) => (console.log(err)))
-                .then(() => {
-                    console.log("NAVIGATING")
-                    return this.props.navigation.navigate('ConfirmPhone', {
-                        user: this.props.navigation.getParam('user'),
-                        phoneNumber: phoneNumber,
-                        verificationId: verificationId,
-                    });
-                })
+				})
+				.then(() => {
+					console.log('NAVIGATING');
+					//if no error was thrown above navigate to ConfirmPhone page with user info
+					return this.props.navigation.navigate('ConfirmPhone', {
+						user: this.props.navigation.getParam('user'),
+						phoneNumber: phoneNumber,
+						verificationId: verificationId,
+					});
+				})
 				.catch((err) => {
+					//this will display an error on the screen
 					return this.setState({
 						hasIncorrectCred: true,
 					});
 				});
-
-			
 		} catch (err) {
-			console.log(err);
+			//this will happen if too many requests were send by user from this IP
+			this.setState({
+				didManyRequests: true,
+			});
 		}
 	};
 
+    /**
+     * if user wants to cancel:
+     * their account will be deleted from firebase and they will navigate to SignUp
+     * they will also be reauthenticated if they registered a long time ago
+     * this will also be called if this page is dismounted
+     */
 	onCancel = () => {
 		firebase
 			.auth()
 			.currentUser.delete()
 			.then(() => {
-				return firebase.auth().signOut();
-            })
-            .then(() => {
-                this.props.navigation.navigate('SignUp')
-            })
+				this.props.navigation.navigate('SignUp');
+			})
 			.catch((err) => {
-                console.log(err);
-            });
-	};
+				firebase
+					.auth()
+					.signInWithEmailAndPassword(
+						this.props.navigation.getParam('user').email,
+						this.props.navigation.getParam('user').password
+					)
+					.then(() => {
+						return this.onCancel();
+					})
+					.catch((err) => {
+						console.log(err);
+					});
+			});
+    };
 
 	render() {
 		return (
@@ -100,6 +126,12 @@ class EnterPhoneScreen extends Component {
 					{this.state.hasIncorrectCred ? (
 						<ErrorMessage>
 							A user with this phone number already exists or the phone number is incorrect
+						</ErrorMessage>
+					) : null}
+
+                    {this.state.didManyRequests ? (
+						<ErrorMessage>
+							You did too many requests, wait for some time before trying again
 						</ErrorMessage>
 					) : null}
 

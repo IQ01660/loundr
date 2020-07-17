@@ -6,6 +6,7 @@ import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view
 
 //firebase stuff
 import * as firebase from 'firebase';
+import "firebase/auth"
 
 //constants
 import Colors from '../../../constants/colors';

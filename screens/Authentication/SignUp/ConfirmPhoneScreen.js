@@ -38,37 +38,42 @@ class ConfirmPhoneScreen extends Component {
 	 * 5) add data to database
 	 */
 	onConfirm = () => {
-		var credential = firebase.auth.PhoneAuthProvider.credential(this.state.verificationId, this.state.code);
+        let credential;
+
+        try {
+            credential = firebase.auth.PhoneAuthProvider.credential(this.state.verificationId, this.state.code);
+        }
+		catch(err) {
+            console.log(err);
+        }
 
 		firebase
 			.auth()
             .signInWithCredential(credential)
-            .catch(err => {
-                return this.setState({
-                    hasIncorrectCred: true,
-                });
-            })
-			.then(() => {
-                return firebase.auth().signOut();
+            .then(() => {
+                return firebase.auth().currentUser.delete()
             })
             .then(() => {
                 return firebase.auth().signInWithEmailAndPassword(this.state.user.email, this.state.user.password)
             })
-            .then(() => (
-                firebase.auth().currentUser.updatePhoneNumber(this.state.phoneNumber)
-            ))
             .then(() => {
                 const user = firebase.auth().currentUser;
-                return firebase.database().ref('users/' + user.uid).set({
+                return firebase.database().ref('usersPublic/' + user.uid).set({
                         displayName: user.displayName,
                         username: this.state.user.username,
                         email: user.email,
-                        phoneNumber: user.phoneNumber,
-                        friends: {},
-                        cards: {},
+                        phoneNumber: this.state.phoneNumber,
                     });
                 }
-            );
+            )
+            .then(() => {
+                return this.props.navigation.navigate('SignIn');
+            })
+            .catch(err => {
+                return this.setState({
+                    hasIncorrectCred: true,
+                });
+            });
 	};
 
 	render() {

@@ -6,6 +6,8 @@ import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view
 
 //firebase stuff
 import * as firebase from 'firebase';
+import "firebase/auth";
+import "firebase/database";
 
 //constants
 import Colors from '../../../constants/colors';
@@ -74,6 +76,7 @@ class SignInScreen extends Component {
                     throw {msg: "Verify email first"};
                 }
             })
+            .then()
             .then(() => {
                 return this.setState({
                     hasIncorrectCredentials: false,
