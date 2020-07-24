@@ -11,7 +11,7 @@ import FontSizes from '../constants/fontSizes';
  * @param {*} props 
  */
 const SubmitButton = (props) => (
-    <TouchableOpacity style={{width: '100%'}} activeOpacity={0.8} onPress={props.onPress} >
+    <TouchableOpacity style={{width: '100%'}} activeOpacity={0.5} onPress={props.onPress} >
         <View style={ {...styles.button, backgroundColor: props.backgroundColor, ...props.style} } >
             <Text style={styles.title}>{props.title}</Text>
         </View>
@@ -21,15 +21,11 @@ const SubmitButton = (props) => (
 const styles = StyleSheet.create({
     button: {
         width: '100%',
-        
-        borderColor: Colors.btnColor,
-        borderWidth: 1,
         borderRadius: 30,
         alignItems: 'center',
         justifyContent: 'center',
         paddingHorizontal: 10,
         paddingVertical: 10,
-
     },
     title: {
         fontFamily: 'mont-alt-regular',

@@ -1,11 +1,12 @@
 import React, { Component } from 'react';
-import { StyleSheet, View, Alert, Text } from 'react-native';
+import { StyleSheet, View, Alert, Text, ActivityIndicator } from 'react-native';
 
 //outside imports
 import * as ImagePicker from 'expo-image-picker';
-import * as FileSystem from 'expo-file-system';
 import * as firebase from 'firebase';
-import "firebase/auth";
+import 'firebase/auth';
+import 'firebase/database';
+import 'firebase/storage';
 
 //components
 import CustomScrollView from '../../../components/CustomScrollView';
@@ -15,6 +16,7 @@ import OptionsButton from '../../../components/OptionsButton';
 
 //constants
 import Colors from '../../../constants/colors';
+import fontSizes from '../../../constants/fontSizes';
 const DEFAULT_AVATAR_PATH = '../../../assets/avatar.jpg';
 const AVATAR_WIDTH_HEIGHT = 80; // the profile photo's side length (for borderRadius and uri photos)
 const CENTRAL_PANEL_WIDTH = '100%';
@@ -22,7 +24,84 @@ const CENTRAL_PANEL_WIDTH = '100%';
 class MyProfileScreen extends Component {
 	state = {
 		avatarSource: require(DEFAULT_AVATAR_PATH),
+		uid: null,
+		username: '',
+		fullName: '',
+        email: '',
+        spinnerOn: false,
 	};
+
+	authStateChangedUnsubscribe;
+
+	/**
+	 * this method updates the state of the page
+	 * containing the info about user signed in
+	 * @param {*} user
+	 */
+	updateUserInfo = async (curUser) => {
+		let username = null;
+
+		const usersSnapshot = await firebase.database().ref('usersPublic').once('value');
+		await usersSnapshot.forEach((user) => {
+			if (user.key === curUser.uid) {
+				username = user.val().username;
+			}
+		});
+
+		this.setState({
+			uid: curUser.uid,
+			email: curUser.email,
+			fullName: curUser.displayName,
+			username: username,
+		});
+	};
+
+	/**
+	 * updates the state of the page, namely the avatarSource.
+	 * should be run when page is just opened and after Pick a photo is clicked
+	 */
+	updateProfilePhoto = (user) => {
+		const profilePhotoRef = firebase.storage().ref('profileImages/' + user.uid);
+		return profilePhotoRef
+			.getDownloadURL()
+			.then((url) => {
+                
+                return this.setState({
+                    avatarSource: {
+                        uri: url,
+                    },
+                });
+            })
+			.catch((err) => {
+                return this.setState({
+                    avatarSource: require(DEFAULT_AVATAR_PATH),
+                });
+            });
+	};
+
+	componentDidMount() {
+		//if the first time getting to the screen
+		const user = firebase.auth().currentUser;
+        this.updateUserInfo(user);
+        this.updateProfilePhoto(user);
+		/**
+		 * this will go back to sign in screen if not authenticated
+		 */
+		this.authStateChangedUnsubscribe = firebase.auth().onAuthStateChanged(async (user) => {
+			if (user) {
+				// User is signed in.
+                this.updateUserInfo(user);
+			} else {
+				// User signed out
+				this.props.navigation.navigate('SignIn');
+			}
+		});
+	}
+
+	componentWillUnmount() {
+		//unsubscribing from auth state change listener
+		this.authStateChangedUnsubscribe();
+    }
 
 	/**
 	 * handling the click "Pick a photo"
@@ -43,39 +122,47 @@ class MyProfileScreen extends Component {
 		//if the user did not pick anything - stop the function
 		if (pickerResult.cancelled === true) {
 			return;
-		}
+        }
+        
+        //turn on the spinner
+        await this.setState({
+            spinnerOn: true,
+        })
 
 		//if the user picked an image
 		//store its initial uri - position in the cache
 		//to get the name of the file
-		const fileName = pickerResult.uri.split('/').pop();
+		const extension = pickerResult.uri.split('.').pop();
 
-		//create a path with that file name in the document directory
-		//which is a permanent local memry of the app on the phone
-		const permanentFilePath = FileSystem.documentDirectory + fileName;
-
-		//if no errors move the image from cache to permanent storage
+		//if no errors move the image from cache to firebase storage
 		try {
-			await FileSystem.moveAsync({
-				from: pickerResult.uri,
-				to: permanentFilePath,
-			});
+			// Create a root reference
+			var storageRef = firebase.storage().ref();
+			// folder with profile images
+			var profileImagesRef = storageRef.child('profileImages');
+			// future profile photo ref
+			var photoRef = profileImagesRef.child(`${this.state.uid}`);
 
-			//update the state and the DB (later)
-			this.setState({
-				avatarSource: {
-					uri: permanentFilePath,
-				},
-			});
+			// making a blob out of picked image
+			const response = await fetch(pickerResult.uri);
+			const blob = await response.blob();
 
-			//also send it to DB
+			//putting the image into storage / replacing prev one
+            await photoRef.put(blob);
+            
+            await this.updateProfilePhoto(firebase.auth().currentUser);
+            
+            //turn the spinner off
+            this.setState({
+                spinnerOn: false,
+            });
 		} catch (err) {
 			//if you got an error log it and use the avatar image from assets
 			console.log(err);
-			this.setState({
+			return this.setState({
 				avatarSource: require(DEFAULT_AVATAR_PATH),
 			});
-		}
+        }
 	};
 
 	render() {
@@ -83,6 +170,7 @@ class MyProfileScreen extends Component {
 			<CustomScrollView backgroundColor={Colors.backgroundGrey} style={styles.container}>
 				{/* container for the photo picking stuff */}
 				<View style={styles.photoPickerContainer}>
+					<Text style={styles.userInfoText}>{this.state.fullName}</Text>
 					{/* the avatar container */}
 					<View style={styles.imageContainer}>
 						<Avatar source={this.state.avatarSource} width={AVATAR_WIDTH_HEIGHT} />
@@ -94,7 +182,13 @@ class MyProfileScreen extends Component {
 						title="Pick a photo"
 						onPress={this.openImagePickerAsync}
 					/>
+
+					{/* user info */}
+
+					<Text style={styles.userInfoText}>{this.state.email}</Text>
+					<Text style={styles.userInfoText}>{this.state.username}</Text>
 				</View>
+                <ActivityIndicator animating={this.state.spinnerOn} style={{marginVertical: 15}} size="large" />
 				<View style={styles.options}>
 					<OptionsButton
 						iconName="credit-card"
@@ -105,12 +199,14 @@ class MyProfileScreen extends Component {
 					/>
 					<OptionsButton iconName="lock" title="Privacy" />
 					<OptionsButton iconName="user" title="Edit Profile" />
-					<OptionsButton iconName="sign-out" title="Sign Out" isLast onPress={() => {
-                        firebase.auth().signOut()
-                            .then(() => {
-                                return this.props.navigation.navigate('SignIn');
-                            })
-                    }} />
+					<OptionsButton
+						iconName="sign-out"
+						title="Sign Out"
+						isLast
+						onPress={() => {
+							firebase.auth().signOut();
+						}}
+					/>
 				</View>
 			</CustomScrollView>
 		);
@@ -124,6 +220,12 @@ const styles = StyleSheet.create({
 	photoPickerContainer: {
 		width: CENTRAL_PANEL_WIDTH,
 		alignItems: 'center',
+	},
+	userInfoText: {
+		color: Colors.btnColor,
+		marginTop: 15,
+		fontFamily: 'mont-alt-medium',
+		fontSize: fontSizes.headerTitle,
 	},
 	imageContainer: {
 		width: AVATAR_WIDTH_HEIGHT,

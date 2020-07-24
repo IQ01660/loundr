@@ -83,9 +83,7 @@ class SignInScreen extends Component {
                 });
             })
 			.then(() => {
-				this.props.navigation.navigate('MyProfile', {
-					user: firebase.auth().currentUser,
-				});
+				this.props.navigation.navigate('MyProfile');
             }).
             catch(err => {
                 this.setState({

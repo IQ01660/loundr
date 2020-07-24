@@ -8,7 +8,7 @@ import CredInput from '../../../components/Auth/CredInput';
 import checkEmail from '../../../constants/checkEmail';
 import Colors from '../../../constants/colors';
 
-import firebase from 'firebase';
+import * as firebase from 'firebase';
 import 'firebase/auth';
 
 class ForgotPassScreen extends Component {
