@@ -104,7 +104,9 @@ class SignInScreen extends Component {
 	/**
 	 * navigating to forgot password screen
 	 */
-	onForgotPassword = () => {};
+	onForgotPassword = () => {
+        this.props.navigation.navigate('ForgotPass');
+    };
 
 	render() {
 		return (

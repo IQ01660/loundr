@@ -6,7 +6,8 @@ import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view
 
 //firebase stuff
 import * as firebase from 'firebase';
-import "firebase/auth"
+import 'firebase/auth';
+import 'firebase/database';
 
 //constants
 import Colors from '../../../constants/colors';
@@ -22,9 +23,10 @@ import SubmitButton from '../../../components/SubmitButton';
 import MinorButton from '../../../components/MinorButton';
 import ErrorMessage from '../../../components/Auth/ErrorMessage';
 
-class SignInScreen extends Component {
+class SignUpScreen extends Component {
 	state = {
 		hasIncorrectCredentials: false,
+		usernameExists: false,
 		//contains the values entered in the input fields
 		userInputs: {
 			name: '',
@@ -56,7 +58,7 @@ class SignInScreen extends Component {
 	/**
 	 * called when "Sign Up" is clicked
 	 */
-	onSignUp = () => {
+	onSignUp = async () => {
 		/**
 		 * Final check of entries
 		 */
@@ -77,42 +79,83 @@ class SignInScreen extends Component {
 		//if passwords do not match
 		if (this.state.userInputs.password !== this.state.userInputs.confirmPass) {
 			return;
-		}
+        }
 
-		//adding this user to firebase authentification
-		firebase
-			.auth()
-			.createUserWithEmailAndPassword(this.state.userInputs.email, this.state.userInputs.password)
-			.then(() => {
-				const user = firebase.auth().currentUser;
-				return user.updateProfile({
-					displayName: this.state.userInputs.name + ' ' + this.state.userInputs.surname,
-				});
-			})
-			.then(() => {
-				if (!firebase.auth().currentUser.emailVerified) {
-					return firebase.auth().currentUser.sendEmailVerification();
+		try {
+            //reset the error state props
+            await this.setState({
+                usernameExists: false,
+                hasIncorrectCredentials: false,
+            });
+
+			/**
+			 * here we check if entered username exists already
+			 */
+			await firebase.auth().signInAnonymously();
+
+			let toThrow = false;
+
+			//all users public-s
+			const usersRef = await firebase.database().ref('usersPublic');
+
+			//going through all users' public info and checking if usernames coincide
+			const usersSnapshot = await usersRef.once('value');
+			usersSnapshot.forEach((childSnapshot) => {
+				if (childSnapshot.val().username === this.state.userInputs.username) {
+					toThrow = true;
 				}
-			})
-			.then(() => {
-				return this.setState({
-					hasIncorrectCredentials: false,
+            });
+            
+            if (toThrow)
+            {
+                throw {msg: 'this username exists'};
+            }
+            //leaving the anonymous authentification
+            await firebase.auth().signOut();
+
+            /**
+             * here we go on creating the user
+             */
+			//adding this user to firebase authentification
+			firebase
+				.auth()
+				.createUserWithEmailAndPassword(this.state.userInputs.email, this.state.userInputs.password)
+				.then(() => {
+					const user = firebase.auth().currentUser;
+					return user.updateProfile({
+						displayName: this.state.userInputs.name + ' ' + this.state.userInputs.surname,
+					});
+				})
+				.then(() => {
+					if (!firebase.auth().currentUser.emailVerified) {
+						return firebase.auth().currentUser.sendEmailVerification();
+					}
+				})
+				.then(() => {
+					return this.setState({
+                        hasIncorrectCredentials: false,
+                        usernameExists: false
+					});
+				})
+				.then(() => {
+					this.props.navigation.navigate('ConfirmEmail', {
+						user: {
+							email: this.state.userInputs.email,
+							password: this.state.userInputs.password,
+							username: this.state.userInputs.username,
+						},
+					});
+				})
+				.catch((err) => {
+					this.setState({
+						hasIncorrectCredentials: true,
+					});
 				});
-			})
-			.then(() => {
-				this.props.navigation.navigate('ConfirmEmail', {
-					user: {
-						email: this.state.userInputs.email,
-						password: this.state.userInputs.password,
-                        username: this.state.userInputs.username,
-					},
-				});
-			})
-			.catch((err) => {
-				this.setState({
-					hasIncorrectCredentials: true,
-				});
-			});
+		} catch (err) {
+            this.setState({
+                usernameExists: true,
+            });
+        }
 	};
 
 	/**
@@ -179,6 +222,9 @@ class SignInScreen extends Component {
 								autoCompleteType="email"
 								secureTextEntry={false}
 							/>
+							{this.state.usernameExists ? (
+								<ErrorMessage>A user with this username already exists</ErrorMessage>
+							) : null}
 							<CredInput
 								onChangeText={(username) => this.onChangeInput('username', username)}
 								value={this.state.userInputs.username}
@@ -270,4 +316,4 @@ const styles = StyleSheet.create({
 	},
 });
 
-export default SignInScreen;
+export default SignUpScreen;

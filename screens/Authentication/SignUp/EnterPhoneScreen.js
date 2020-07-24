@@ -61,7 +61,7 @@ class EnterPhoneScreen extends Component {
 					//otherwise go through every $uid
 					return snapshot.forEach((childSnapshot) => {
 						//check if any $uid has their phoneNumber equal to the one entered
-						if (childSnapshot.phoneNumber === this.state.phone) {
+						if (childSnapshot.val().phoneNumber === this.state.phone) {
 							//if yes go to closest catch and update state - hasIncorectCred
 							throw { msg: 'this phone number exists' };
 						}
