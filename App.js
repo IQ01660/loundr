@@ -12,6 +12,10 @@ import { AppLoading } from 'expo';
 //importing font package
 import * as Font from 'expo-font'
 
+//importing firebase configg object
+import * as firebase from 'firebase'; // firebase itself
+import firebaseConfig from './Firebase';
+
 /**
  * fetches all fonts;
  * returns a promise;
@@ -35,11 +39,21 @@ const fetchFonts = () => {
  * Here we will have the main SwitchNavigator rendered
  */
 class App extends Component {
+    constructor(props) 
+    {
+        super(props);
+
+        if (!firebase.apps.length)
+        {
+            firebase.initializeApp(firebaseConfig);
+        }
+    }
+
 	state = {
 		//checks if fonts loaded
-		fontsLoaded: false,
+        fontsLoaded: false,
 	};
-
+    
 	render() {
 		/**
 		 * render AppLoading screen if

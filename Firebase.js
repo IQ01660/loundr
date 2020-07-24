@@ -1,7 +1,7 @@
 //firebase setup
-import * as firebase from 'firebase/app';
+// import * as firebase from 'firebase/app';
 // import 'firebase/analytics';
-import 'firebase/database';
+// import 'firebase/database';
 // import 'firebase/firestore';
 // import 'firebase/auth';
 
@@ -16,8 +16,4 @@ const firebaseConfig = {
 	measurementId: 'G-BMV4TW6QFQ',
 };
 
-// Initialize Firebase
-firebase.initializeApp(firebaseConfig);
-console.log("HEY");
-
-export default firebase;
+export default firebaseConfig;
