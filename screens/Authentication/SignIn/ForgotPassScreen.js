@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet, ActivityIndicator } from 'react-native';
 
 import CustomScrollView from '../../../components/CustomScrollView';
 import ErrorMessage from '../../../components/Auth/ErrorMessage';
