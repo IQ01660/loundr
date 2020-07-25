@@ -38,4 +38,8 @@ export default {
   //color of the error message text
   errorMessage: '#ad1507',
 
+  //colors for grey colored text input fields
+  greyInputBackground: '#dbdbdb',
+  greyInputText: "#858585"
+
 };

@@ -17,11 +17,11 @@ export default function CredInput(props) {
 
 	return (
 		<TextInput
+            autoCapitalize="none"
             {...props}
 			onChangeText={props.onChangeText}
 			value={props.value}
 			style={{ ...styles.input, ...props.style, borderColor: borderColor, borderWidth: borderWidth }}
-			autoCapitalize="none"
 			placeholder={props.placeholder}
 			placeholderTextColor={Colors.placeHolderColor}
 			selectionColor={Colors.btnColor}
@@ -35,6 +35,7 @@ export default function CredInput(props) {
 				borderColorUpdate(Colors.customWhite);
                 borderWidthUpdate(1);
 			}}
+            
 		/>
 	);
 }

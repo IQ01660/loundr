@@ -12,13 +12,12 @@ import FontSizes from '../constants/fontSizes';
 import { Feather, Ionicons } from '@expo/vector-icons'; 
 
 //screens
-import MyProfileScreen from '../screens/App/Profile/MyProfileScreen';
-import FindUsersScreen from '../screens/App/Users/FindUsersScreen';
 import FriendsScreen from '../screens/App/Users/FriendsScreen';
 import SendMoneyScreen from '../screens/App/SendMoney/SendMoneyScreen';
 
 //other navigators
 import ProfileStackNavigator from './App/ProfileStackNavigator';
+import FindUsersStackNavigator from './App/FindUsersStackNavigator';
 
 const AppTabNavigator = createBottomTabNavigator(
     {
@@ -31,7 +30,7 @@ const AppTabNavigator = createBottomTabNavigator(
             },
         },
         FindUsers: {
-            screen: FindUsersScreen,
+            screen: FindUsersStackNavigator,
             navigationOptions: {
                 tabBarIcon: ({ tintColor }) => {
                     return <Ionicons name="ios-search" color={tintColor} size={FontSizes.tabIcon} />;

@@ -193,6 +193,7 @@ class SignUpScreen extends Component {
 
 							{/* Input Fields */}
 							<CredInput
+                                autoCapitalize="words"
 								onChangeText={(name) => this.onChangeInput('name', name)}
 								value={this.state.userInputs.name}
 								style={styles.input}
@@ -201,6 +202,7 @@ class SignUpScreen extends Component {
 								secureTextEntry={false}
 							/>
 							<CredInput
+                                autoCapitalize="words"
 								onChangeText={(surname) => this.onChangeInput('surname', surname)}
 								value={this.state.userInputs.surname}
 								style={styles.input}

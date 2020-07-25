@@ -76,7 +76,16 @@ class SignInScreen extends Component {
                     throw {msg: "Verify email first"};
                 }
             })
-            .then()
+            .then(() => {
+                console.log("Checking phone stuff in db");
+                //checking if user completed sign up (e.g. verified phone number)
+                return firebase.database().ref('usersPublic/' + firebase.auth().currentUser.uid).once('value').then(snapshot => {
+                    if (!snapshot.exists())
+                    {
+                        throw {msg: 'no user registered in db; sign up incomplete'};
+                    }
+                })
+            })
             .then(() => {
                 return this.setState({
                     hasIncorrectCredentials: false,
