@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
-import { View, StyleSheet, Keyboard, FlatList, Text } from 'react-native';
+import { View, StyleSheet, Keyboard, FlatList, Platform } from 'react-native';
 
 //constants
 import Colors from '../../../constants/colors';
 import FontSizes from '../../../constants/fontSizes';
+const AVATAR_DEFAULT_SOURCE = '../../../assets/avatar.jpg';
 
 //firebase imports
 import * as firebase from 'firebase';
@@ -13,29 +14,29 @@ import 'firebase/database';
 //components
 import SearchInput from '../../../components/SearchInput';
 import SearchButton from '../../../components/SearchButton';
+import UserButton from '../../../components/Users/UserButton';
 
 class FindUsersScreen extends Component {
 	state = {
 		isSearching: false,
 		searchValue: '',
-		searchedUsers: [],
+		searchedUsers: [], // contains objects of form {displayName, email, phoneNumber, username, id (same as uid)}, photoUrl (of the profile photo)
 	};
 
 	onChangeSearch = async (text) => {
 		await this.setState({
-            searchValue: text,
-            searchedUsers: [],
-        });
-        
-        if (!text)
-        {
-            return;
-        }
+			searchValue: text,
+			searchedUsers: [],
+		});
+
+		if (!text) {
+			return;
+		}
 
 		//taking a list of searched users from db
-        //and putting them into seachedUsers array
-        let usersList = [];
-        return firebase
+		//and putting them into seachedUsers array
+		let usersList = [];
+		await firebase
 			.database()
 			.ref('usersPublic')
 			.orderByChild('username')
@@ -43,15 +44,15 @@ class FindUsersScreen extends Component {
 			.then((users) => {
 				users.forEach((user) => {
 					if (user.val().username.includes(this.state.searchValue)) {
-                        usersList.push({...user.val(), id: user.key});
+						usersList.push({ ...user.val(), id: user.key });
 					}
 				});
-            })
-            .then(() => (
-                this.setState({
-                    searchedUsers: usersList,
-                })
-            ));
+			})
+			.then(() =>
+				this.setState({
+					searchedUsers: usersList,
+				})
+			);
 	};
 
 	onCancel = () => {
@@ -92,12 +93,20 @@ class FindUsersScreen extends Component {
 						</View>
 					) : null}
 				</View>
+
 				<FlatList
-                    keyboardDismissMode="on-drag"
-                    keyboardShouldPersistTaps="always"
+					keyboardDismissMode="on-drag"
+					keyboardShouldPersistTaps="always"
 					data={this.state.searchedUsers}
 					renderItem={({ item }) => {
-						return (<Text>{item.username}</Text>);
+						return (
+                            <UserButton
+                                source={item.photoUrl ? { uri: item.photoUrl } : require(AVATAR_DEFAULT_SOURCE)}
+                                username={item.username}
+                                uid={item.id}
+                                displayName={item.displayName}
+                            />
+						);
 					}}
 				/>
 			</View>

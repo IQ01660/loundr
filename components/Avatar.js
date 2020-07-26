@@ -4,6 +4,11 @@ import { View, Image, StyleSheet } from 'react-native';
 //constants
 import Colors from '../constants/colors';
 
+/**
+ * @width = height = container.width/height
+ * @source
+ * @param {*} props 
+ */
 const Avatar = (props) => (
     <View style={{ ...styles.container, borderRadius: props.width / 2}} >
         <Image style={{ width: props.width, height: props.width }} source={props.source} resizeMode="cover" />

@@ -61,22 +61,20 @@ class MyProfileScreen extends Component {
 	 * should be run when page is just opened and after Pick a photo is clicked
 	 */
 	updateProfilePhoto = (user) => {
-		const profilePhotoRef = firebase.storage().ref('profileImages/' + user.uid);
-		return profilePhotoRef
-			.getDownloadURL()
-			.then((url) => {
-                
-                return this.setState({
-                    avatarSource: {
-                        uri: url,
-                    },
-                });
-            })
-			.catch((err) => {
-                return this.setState({
-                    avatarSource: require(DEFAULT_AVATAR_PATH),
-                });
+        if (user.photoURL)
+        {
+            this.setState({
+                avatarSource: {
+                    uri: user.photoURL,
+                },
             });
+        }
+        else
+        {
+            this.setState({
+                avatarSource: require(DEFAULT_AVATAR_PATH),
+            });
+        }
 	};
 
 	componentDidMount() {
@@ -149,13 +147,29 @@ class MyProfileScreen extends Component {
 
 			//putting the image into storage / replacing prev one
             await photoRef.put(blob);
+
+            //the current user authenticated
+            const currentUser = firebase.auth().currentUser;
+
+            //the url of the brand new photo
+            const url = await firebase.storage().ref('profileImages/' + currentUser.uid).getDownloadURL();
+
+            //updating the photoUrl for fast future photo upload
+            await currentUser.updateProfile({
+                photoURL: url,
+            })
             
-            await this.updateProfilePhoto(firebase.auth().currentUser);
-            
+            //updating the photo on the screen
+            await this.updateProfilePhoto(currentUser);
+
             //turn the spinner off
             this.setState({
                 spinnerOn: false,
             });
+
+            // uploading the photoUrl to DB publicUsers
+            firebase.database().ref('usersPublic/' + currentUser.uid + '/photoUrl').set(url);
+
 		} catch (err) {
 			//if you got an error log it and use the avatar image from assets
 			console.log(err);
