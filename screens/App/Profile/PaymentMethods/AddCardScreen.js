@@ -20,20 +20,28 @@ class AddCardScreen extends Component {
 	};
 
 	onAdd = async () => {
+        //then navigate to setting up bank info
+        this.props.navigation.navigate('BankInfo');
 		const information = {
 			card: {
 				number: this.state.cardInfo.values.number,
 				exp_month: this.state.cardInfo.values.expiry.split('/')[0],
 				exp_year: this.state.cardInfo.values.expiry.split('/')[1],
 				cvc: this.state.cardInfo.values.cvc,
-				name: this.state.cardInfo.values.name,
+				name: this.state.cardInfo.values.name.toUpperCase(),
 			},
-		};
-		var card = await stripe.createToken(information);
-		var token = card.id;
-		// send token to backend for processing
-        console.log(card); //"id": "tok_1H9dC8Efo9dUw6oJZYKP6mqw"
-        
+        };
+        try{
+            var card = await stripe.createToken(information);
+            var token = card.id;
+            // send token to backend for processing
+            console.log(card); //"id": "tok_1H9dC8Efo9dUw6oJZYKP6mqw"
+        }
+        catch(err)
+        {
+
+        }
+		
 	};
 
 	_onChange = (form) => {
@@ -44,14 +52,29 @@ class AddCardScreen extends Component {
 
 	render() {
 		return (
-			<CustomScrollView backgroundColor={Colors.backgroundGrey}>
-				<CreditCardInput onChange={this._onChange} requiresName={true} />
-				<RectButton title="Add" onPress={this.onAdd} />
+			<CustomScrollView style={styles.screen} backgroundColor={Colors.backgroundGrey}>
+				<View style={styles.addButton}>
+					<RectButton title="Next" onPress={this.onAdd} />
+				</View>
+				<View style={styles.card}>
+					<CreditCardInput onChange={this._onChange} requiresName={true} />
+				</View>
 			</CustomScrollView>
 		);
 	}
 }
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+	screen: {
+		alignItems: 'center',
+	},
+	card: {
+		marginVertical: 15,
+	},
+	addButton: {
+        marginTop: 15,
+		width: '90%',
+	},
+});
 
 export default AddCardScreen;

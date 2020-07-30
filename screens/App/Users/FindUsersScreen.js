@@ -106,8 +106,7 @@ class FindUsersScreen extends Component {
                                 uid={item.id}
                                 displayName={item.displayName}
                                 onPress={() => {
-                                    console.log("sending...");
-                                    fetch('http://localhost:5001/loundr-fced9/us-central1/addMessage?text=lucky')
+                                    console.log("sending....");
                                 }}
                             />
 						);

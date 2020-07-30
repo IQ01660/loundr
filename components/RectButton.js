@@ -19,10 +19,18 @@ const RectButton = props => (
 
 const styles = StyleSheet.create({
     button: {
-        backgroundColor: Colors.customBlack,
-        
+        borderRadius: 5,
+        backgroundColor: Colors.screenColor,
+        justifyContent: 'center',
+        alignItems: 'center',
+        paddingVertical: 10,
+
     },
-    title: {},
+    title: {
+        color: Colors.customWhite,
+        fontFamily: 'mont-alt-regular',
+        fontSize: 28,
+    },
 });
 
 export default RectButton;

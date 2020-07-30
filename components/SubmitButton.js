@@ -11,7 +11,7 @@ import FontSizes from '../constants/fontSizes';
  * @param {*} props 
  */
 const SubmitButton = (props) => (
-    <TouchableOpacity style={{width: '100%'}} activeOpacity={0.5} onPress={props.onPress} >
+    <TouchableOpacity style={{width: '100%'}} activeOpacity={0.5} onPress={props.onPress} disabled={props.disabled == true} >
         <View style={ {...styles.button, backgroundColor: props.backgroundColor, ...props.style} } >
             <Text style={styles.title}>{props.title}</Text>
         </View>
