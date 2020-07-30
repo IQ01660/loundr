@@ -3,5 +3,6 @@
         "activityBar.background": "#4A221F",
         "titleBar.activeBackground": "#68302B",
         "titleBar.activeForeground": "#FCF9F9"
-    }
+    },
+    "maven.view": "flat"
 }

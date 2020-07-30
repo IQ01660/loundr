@@ -25,6 +25,7 @@ import ErrorMessage from '../../../components/Auth/ErrorMessage';
 
 class SignUpScreen extends Component {
 	state = {
+		buttonsDisabled: false,
 		hasIncorrectCredentials: false,
 		usernameExists: false,
 		//contains the values entered in the input fields
@@ -62,6 +63,7 @@ class SignUpScreen extends Component {
 		/**
 		 * Final check of entries
 		 */
+
 		//if any of the fields are empty
 		Object.keys(this.state.userInputs).forEach((key) => {
 			if (!this.state.userInputs[key]) {
@@ -79,14 +81,14 @@ class SignUpScreen extends Component {
 		//if passwords do not match
 		if (this.state.userInputs.password !== this.state.userInputs.confirmPass) {
 			return;
-        }
+		}
 
 		try {
-            //reset the error state props
-            await this.setState({
-                usernameExists: false,
-                hasIncorrectCredentials: false,
-            });
+			//reset the error state props
+			await this.setState({
+				usernameExists: false,
+				hasIncorrectCredentials: false,
+			});
 
 			/**
 			 * here we check if entered username exists already
@@ -104,22 +106,27 @@ class SignUpScreen extends Component {
 				if (childSnapshot.val().username === this.state.userInputs.username) {
 					toThrow = true;
 				}
-            });
-            
-            if (toThrow)
-            {
-                throw {msg: 'this username exists'};
-            }
-            //leaving the anonymous authentification
-            await firebase.auth().signOut();
+			});
 
-            /**
-             * here we go on creating the user
-             */
+			if (toThrow) {
+				throw { msg: 'this username exists' };
+			}
+			//leaving the anonymous authentification
+			await firebase.auth().signOut();
+
+			/**
+			 * here we go on creating the user
+			 */
 			//adding this user to firebase authentification
 			firebase
 				.auth()
 				.createUserWithEmailAndPassword(this.state.userInputs.email, this.state.userInputs.password)
+				.then(() =>
+					// disable all buttons after signing up
+					this.setState({
+						buttonsDisabled: true,
+					})
+				)
 				.then(() => {
 					const user = firebase.auth().currentUser;
 					return user.updateProfile({
@@ -133,8 +140,8 @@ class SignUpScreen extends Component {
 				})
 				.then(() => {
 					return this.setState({
-                        hasIncorrectCredentials: false,
-                        usernameExists: false
+						hasIncorrectCredentials: false,
+						usernameExists: false,
 					});
 				})
 				.then(() => {
@@ -152,10 +159,10 @@ class SignUpScreen extends Component {
 					});
 				});
 		} catch (err) {
-            this.setState({
-                usernameExists: true,
-            });
-        }
+			this.setState({
+				usernameExists: true,
+			});
+		}
 	};
 
 	/**
@@ -193,6 +200,7 @@ class SignUpScreen extends Component {
 
 							{/* Input Fields */}
 							<CredInput
+								autoCapitalize="words"
 								onChangeText={(name) => this.onChangeInput('name', name)}
 								value={this.state.userInputs.name}
 								style={styles.input}
@@ -201,6 +209,7 @@ class SignUpScreen extends Component {
 								secureTextEntry={false}
 							/>
 							<CredInput
+								autoCapitalize="words"
 								onChangeText={(surname) => this.onChangeInput('surname', surname)}
 								value={this.state.userInputs.surname}
 								style={styles.input}
@@ -266,6 +275,7 @@ class SignUpScreen extends Component {
 								title="Sign Up"
 								backgroundColor={Colors.btnColor}
 								onPress={this.onSignUp}
+								disabled={this.state.buttonsDisabled}
 							/>
 
 							{/* Go to Sign In Page */}
@@ -275,6 +285,7 @@ class SignUpScreen extends Component {
 								color={Colors.btnColor}
 								style={styles.minorBtn}
 								onPress={this.onSignInNavigate}
+								disabled={this.state.buttonsDisabled}
 							/>
 						</View>
 					</View>

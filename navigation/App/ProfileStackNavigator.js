@@ -12,6 +12,7 @@ import FontSizes from '../../constants/fontSizes';
 import MyProfileScreen from '../../screens/App/Profile/MyProfileScreen';
 import PaymentMethodsScreens from '../../screens/App/Profile/PaymentMethods/PaymentMethodsScreen';
 import AddCardScreen from '../../screens/App/Profile/PaymentMethods/AddCardScreen';
+import BankInfoScreen from '../../screens/App/Profile/PaymentMethods/BankInfoScreen';
 
 const ProfileStackNavigator = createStackNavigator(
 	{
@@ -33,7 +34,12 @@ const ProfileStackNavigator = createStackNavigator(
                 title: 'Add a Card'
             },
         },
-
+        BankInfo: {
+            screen: BankInfoScreen,
+            navigationOptions: {
+                title: 'Bank Details'
+            },
+        },
 	},
 	{
 		initialRouteName: 'MyProfile',

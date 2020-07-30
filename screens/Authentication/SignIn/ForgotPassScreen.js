@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet, ActivityIndicator } from 'react-native';
 
 import CustomScrollView from '../../../components/CustomScrollView';
 import ErrorMessage from '../../../components/Auth/ErrorMessage';
@@ -8,7 +8,7 @@ import CredInput from '../../../components/Auth/CredInput';
 import checkEmail from '../../../constants/checkEmail';
 import Colors from '../../../constants/colors';
 
-import firebase from 'firebase';
+import * as firebase from 'firebase';
 import 'firebase/auth';
 
 class ForgotPassScreen extends Component {

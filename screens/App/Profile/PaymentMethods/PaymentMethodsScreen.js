@@ -6,6 +6,8 @@ import CustomScrollView from '../../../../components/CustomScrollView';
 import OptionsButton from '../../../../components/OptionsButton';
 import FeatherIconButton from '../../../../components/FeatherIconButton';
 
+import * as firebase from 'firebase'
+
 //constants
 import Colors from '../../../../constants/colors';
 const CENTRAL_PANEL_WIDTH = '100%';

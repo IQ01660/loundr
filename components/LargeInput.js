@@ -1,18 +1,11 @@
 import React, { useState } from 'react';
 import { TextInput, StyleSheet } from 'react-native';
-import Colors from '../../constants/colors';
-import FontSizes from '../../constants/fontSizes';
+import FontSizes from '../constants/fontSizes';
 
-/**
- * The input will take the full width
- * of the container.
- * Received props:
- * style, value, onChangeText, autoCompleteType,
- * secureTextEntry, placeholder
- * @param {*} props
- */
-export default function CredInput(props) {
-	const [borderColor, borderColorUpdate] = useState(Colors.customWhite);
+import Colors from '../constants/colors';
+
+const LargeInput = props => {
+    const [borderColor, borderColorUpdate] = useState(Colors.screenColor);
 	const [borderWidth, borderWidthUpdate] = useState(1);
 
 	return (
@@ -32,7 +25,7 @@ export default function CredInput(props) {
 				borderWidthUpdate(4);
 			}}
 			onBlur={() => {
-				borderColorUpdate(Colors.customWhite);
+				borderColorUpdate(Colors.screenColor);
                 borderWidthUpdate(1);
 			}}
             
@@ -43,11 +36,13 @@ export default function CredInput(props) {
 const styles = StyleSheet.create({
 	input: {
 		height: 50,
-		width: '100%',
-		borderRadius: 30,
+        width: '100%',
+        borderRadius: 5,
 		paddingHorizontal: 30,
-		color: Colors.customWhite,
-		fontSize: FontSizes.credText,
-		fontFamily: 'mont-alt-regular',
+		color: Colors.customBlack,
+		fontSize: 27,
 	},
 });
+
+
+export default LargeInput;
