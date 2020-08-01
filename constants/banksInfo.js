@@ -15,7 +15,7 @@ export const BanksList = [
 
 //requirements
 const PIN_CODE = "Pin Code (from Identity Card): Last 7 characters excluding the last one"
-const DoB = "Date of Birth: DD.MM.YYYY";
+const DoB = "Date of Birth: DD.MM. YYYY";
 const CLIENT_CODE = "Client Code";
 const CLIENT_ID = "Client ID: PAŞA Bankda hesab açmış müştəriyə bank tərəfindən təqdim edilmiş indentifikasiya nömrəsi nəzərdə tutulur";
 const ID_CARD_NUMBER = "ID Card Number: e.g. AZEXXXXXXXX"
