@@ -4,6 +4,12 @@ import FontSizes from '../constants/fontSizes';
 
 import Colors from '../constants/colors';
 
+/**
+ * @onChangeText
+ * @placeholder
+ * @value
+ * @param {*} props 
+ */
 const LargeInput = props => {
     const [borderColor, borderColorUpdate] = useState(Colors.screenColor);
 	const [borderWidth, borderWidthUpdate] = useState(1);

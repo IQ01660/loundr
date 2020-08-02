@@ -93,7 +93,6 @@ class SignUpScreen extends Component {
 			/**
 			 * here we check if entered username exists already
 			 */
-			await firebase.auth().signInAnonymously();
 
 			let toThrow = false;
 
@@ -111,8 +110,6 @@ class SignUpScreen extends Component {
 			if (toThrow) {
 				throw { msg: 'this username exists' };
 			}
-			//leaving the anonymous authentification
-			await firebase.auth().signOut();
 
 			/**
 			 * here we go on creating the user

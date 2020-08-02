@@ -1,13 +1,13 @@
 import React, { Component } from 'react';
-import { StyleSheet, View, Text, TouchableWithoutFeedback, Keyboard, Alert } from 'react-native';
+import { StyleSheet, View, Text, TouchableWithoutFeedback, Keyboard, ActivityIndicator } from 'react-native';
 
 //imports from outside
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 
 //firebase stuff
 import * as firebase from 'firebase';
-import "firebase/auth";
-import "firebase/database";
+import 'firebase/auth';
+import 'firebase/database';
 
 //constants
 import Colors from '../../../constants/colors';
@@ -26,22 +26,23 @@ class SignInScreen extends Component {
 	state = {
 		//contains the values entered of the input fields
 		userInputs: {
-			email: '',
-            password: '',
-        },
+			username: '',
+			password: '',
+		},
         hasIncorrectCredentials: false,
+        isLoading: false,
 	};
 	/**
 	 * updates the state by changing the
 	 * username the user entered
 	 * @param {*} username - the updated username
 	 */
-	onChangeEmail = (email) => {
+	onChangeEmail = (username) => {
 		this.setState((prevState) => {
 			return {
 				userInputs: {
 					...prevState.userInputs,
-					email: email,
+					username: username,
 				},
 			};
 		});
@@ -61,44 +62,76 @@ class SignInScreen extends Component {
 				},
 			};
 		});
-    };
+	};
 
 	/**
 	 * called when "Sign In" is clicked
 	 */
-	onSignIn = () => {
-		firebase
-			.auth()
-            .signInWithEmailAndPassword(this.state.userInputs.email, this.state.userInputs.password)
-            .then(() => {
-                if (!firebase.auth().currentUser.emailVerified)
-                {
-                    throw {msg: "Verify email first"};
-                }
-            })
-            .then(() => {
-                console.log("Checking phone stuff in db");
-                //checking if user completed sign up (e.g. verified phone number)
-                return firebase.database().ref('usersPublic/' + firebase.auth().currentUser.uid).once('value').then(snapshot => {
-                    if (!snapshot.exists())
+	onSignIn = async () => {
+        await this.setState({
+            isLoading: true,
+        })
+
+		const email = await firebase
+			.database()
+			.ref('usersPublic')
+			.once('value')
+			.then((snap) => {
+                let userEmail;
+                snap.forEach(userSnap => {
+                    if (userSnap.val().username === this.state.userInputs.username)
                     {
-                        throw {msg: 'no user registered in db; sign up incomplete'};
+                        userEmail = userSnap.val().email;
                     }
                 })
-            })
-            .then(() => {
-                return this.setState({
+                return userEmail;
+            });
+        if (!email)
+        {
+            await this.setState({
+                hasIncorrectCredentials: true,
+                isLoading: false,
+            });
+
+            return;
+        }
+
+		firebase
+			.auth()
+			.signInWithEmailAndPassword(email, this.state.userInputs.password)
+			.then(() => {
+				if (!firebase.auth().currentUser.emailVerified) {
+					throw { msg: 'Verify email first' };
+				}
+			})
+			.then(() => {
+				console.log('Checking phone stuff in db');
+				//checking if user completed sign up (e.g. verified phone number)
+				return firebase
+					.database()
+					.ref('usersPublic/' + firebase.auth().currentUser.uid)
+					.once('value')
+					.then((snapshot) => {
+						if (!snapshot.exists()) {
+							throw { msg: 'no user registered in db; sign up incomplete' };
+						}
+					});
+			})
+			.then(() => {
+				return this.setState({
                     hasIncorrectCredentials: false,
-                });
-            })
+                    isLoading: false,
+				});
+			})
 			.then(() => {
 				this.props.navigation.navigate('MyProfile');
-            }).
-            catch(err => {
-                this.setState({
+			})
+			.catch((err) => {
+				this.setState({
                     hasIncorrectCredentials: true,
-                });
-            });
+                    isLoading: false,
+				});
+			});
 	};
 
 	/**
@@ -112,8 +145,8 @@ class SignInScreen extends Component {
 	 * navigating to forgot password screen
 	 */
 	onForgotPassword = () => {
-        this.props.navigation.navigate('ForgotPass');
-    };
+		this.props.navigation.navigate('ForgotPass');
+	};
 
 	render() {
 		return (
@@ -125,16 +158,18 @@ class SignInScreen extends Component {
 						<SignInLogo style={styles.logo} />
 
 						<View style={styles.loginContainer}>
-                            {/* Potential Error Message */}
-                            {this.state.hasIncorrectCredentials ? <ErrorMessage>Incorrect email or password</ErrorMessage> : null}
+							{/* Potential Error Message */}
+							{this.state.hasIncorrectCredentials ? (
+								<ErrorMessage>Incorrect username or password</ErrorMessage>
+							) : null}
 
 							{/* Input Fields */}
 							<CredInput
 								onChangeText={this.onChangeEmail}
-								value={this.state.userInputs.email}
+								value={this.state.userInputs.username}
 								style={styles.input}
-								placeholder="email..."
-								autoCompleteType="email"
+								placeholder="username..."
+								autoCompleteType="username"
 								secureTextEntry={false}
 							/>
 							<CredInput
@@ -145,6 +180,8 @@ class SignInScreen extends Component {
 								autoCompleteType="password"
 								secureTextEntry={true}
 							/>
+
+                            <ActivityIndicator size="large" animating={this.state.isLoading} />
 
 							{/* Signing In */}
 							<SubmitButton

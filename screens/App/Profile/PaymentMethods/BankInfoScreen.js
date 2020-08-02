@@ -6,6 +6,10 @@ import Colors from '../../../../constants/colors';
 import FontSizes from '../../../../constants/fontSizes';
 import { BanksList, BanksInputs } from '../../../../constants/banksInfo';
 
+import * as firebase from 'firebase';
+import "firebase/database";
+import "firebase/auth";
+
 //components
 import RectButton from '../../../../components/RectButton';
 import RNPickerSelect from 'react-native-picker-select';
@@ -15,10 +19,26 @@ import LargeInput from '../../../../components/LargeInput';
 class BankInfoScreen extends Component {
     state = {
         selectedBank: null,
+        bankInfo: null,
     };
 
     onSubmit = () => {
+        const user = firebase.auth().currentUser;
+        firebase.database().ref('usersBankInfo/' + user.uid).set({
+            selectBank: this.state.selectedBank,
+            verified: 'pending', //denied or accepted later
+            entries: this.state.bankInfo,
+        });
+    };
 
+    onChangeInput = (fieldName, response) => {
+        this.setState((prevState, props) => {
+            const bankInfoCopy = { ...prevState.bankInfo };
+            bankInfoCopy[fieldName] = response
+            return {
+                bankInfo: bankInfoCopy,
+            };
+        });
     };
 
 	render() {
@@ -27,7 +47,7 @@ class BankInfoScreen extends Component {
                 
 				<View style={styles.select} >
 					<RNPickerSelect
-						onValueChange={(value) => this.setState({ selectedBank: value })}
+						onValueChange={(value) => this.setState({ selectedBank: value, bankInfo: null })}
 						placeholder={{ label: 'Select a Bank', value: null }}
 						style={selectBank}
 						items={BanksList}
@@ -42,7 +62,7 @@ class BankInfoScreen extends Component {
                             return (
                                 <View key={idx} style={styles.inputCluster} >
                                     <Text style={styles.inputText}>{fieldName}</Text>
-                                    <LargeInput placeholder="" />
+                                    <LargeInput value={this.state.bankInfo ? this.state.bankInfo[fieldName] : ''} placeholder="" onChangeText={(text) => this.onChangeInput(fieldName, text)} />
                                 </View>
                             )
                         })
