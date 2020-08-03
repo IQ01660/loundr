@@ -29,6 +29,7 @@ class BankInfoScreen extends Component {
             verified: 'pending', //denied or accepted later
             entries: this.state.bankInfo,
         });
+        this.props.navigation.navigate('MyProfile');
     };
 
     onChangeInput = (fieldName, response) => {

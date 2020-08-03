@@ -22,10 +22,10 @@ class PaymentMethodsScreen extends Component {
                     }} />
 				</View>
 				<View style={styles.cards}>
-					<OptionsButton iconName="credit-card" title="**** **** **** 1342" />
+					{/* <OptionsButton iconName="credit-card" title="**** **** **** 1342" />
 					<OptionsButton iconName="credit-card" title="**** **** **** 2356" />
-					<OptionsButton iconName="credit-card" title="**** **** **** 7534" />
-					<OptionsButton iconName="credit-card" title="**** **** **** 9032" isLast />
+					<OptionsButton iconName="credit-card" title="**** **** **** 7534" /> */}
+					{/* <OptionsButton iconName="credit-card" title="**** **** **** 9032" isLast /> */}
 				</View>
 			</CustomScrollView>
 		);
