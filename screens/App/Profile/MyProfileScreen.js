@@ -54,7 +54,7 @@ class MyProfileScreen extends Component {
 			fullName: curUser.displayName,
 			username: username,
 		});
-	};
+    };
 
 	/**
 	 * updates the state of the page, namely the avatarSource.

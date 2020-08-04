@@ -2,11 +2,11 @@ import React, { Component } from 'react';
 import { View, StyleSheet, ActivityIndicator, Text } from 'react-native';
 import RectButton from '../../../../components/RectButton';
 
+import api_keys from '../../../../constants/api-keys';
+
 //outside imports
 import { CreditCardInput } from 'react-native-credit-card-input';
-const stripe = require('stripe-client')(
-	'pk_test_51H4OZVEfo9dUw6oJVfMQHsnMHjZL4IaX3OTa1aFkiixMSux27YEIvAhqhMLZLT7iCyaAinMPNVRz3voZw7sfBeZb00SmE7PUsZ'
-);
+const stripe = require('stripe-client')(api_keys.stripe_publishable_key);
 
 //constants
 import Colors from '../../../../constants/colors';
@@ -18,13 +18,14 @@ import 'firebase/auth';
 
 //components
 import CustomScrollView from '../../../../components/CustomScrollView';
+import fontSizes from '../../../../constants/fontSizes';
 
 class AddCardScreen extends Component {
 	state = {
 		cardInfo: null,
 		hasError: false,
 		isLoading: false,
-	};
+    };
 
 	onAdd = async () => {
 		if (!this.state.cardInfo) {
@@ -143,8 +144,11 @@ class AddCardScreen extends Component {
 				<View style={styles.addButton}>
 					<RectButton title="Next" onPress={this.onAdd} />
 				</View>
+
 				<ActivityIndicator size="large" animating={this.state.isLoading} />
-				{this.state.hasError ? <Text>Incorrect information entered on the card</Text> : null}
+
+				{this.state.hasError ? <Text style={styles.error} >Incorrect information entered on the card</Text> : null}
+
 				<View style={styles.card}>
 					<CreditCardInput onChange={this._onChange} requiresName={true} />
 				</View>
@@ -163,7 +167,12 @@ const styles = StyleSheet.create({
 	addButton: {
 		marginTop: 15,
 		width: '90%',
-	},
+    },
+    error: {
+        fontFamily: 'mont-alt-regular',
+        fontSize: fontSizes.credText,
+        color: Colors.errorMessage,
+    }
 });
 
 export default AddCardScreen;
