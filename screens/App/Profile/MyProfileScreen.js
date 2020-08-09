@@ -27,8 +27,8 @@ class MyProfileScreen extends Component {
 		uid: null,
 		username: '',
 		fullName: '',
-        email: '',
-        spinnerOn: false,
+		email: '',
+		spinnerOn: false,
 	};
 
 	authStateChangedUnsubscribe;
@@ -54,41 +54,38 @@ class MyProfileScreen extends Component {
 			fullName: curUser.displayName,
 			username: username,
 		});
-    };
+	};
 
 	/**
 	 * updates the state of the page, namely the avatarSource.
 	 * should be run when page is just opened and after Pick a photo is clicked
 	 */
 	updateProfilePhoto = (user) => {
-        if (user.photoURL)
-        {
-            this.setState({
-                avatarSource: {
-                    uri: user.photoURL,
-                },
-            });
-        }
-        else
-        {
-            this.setState({
-                avatarSource: require(DEFAULT_AVATAR_PATH),
-            });
-        }
+		if (user.photoURL) {
+			this.setState({
+				avatarSource: {
+					uri: user.photoURL,
+				},
+			});
+		} else {
+			this.setState({
+				avatarSource: require(DEFAULT_AVATAR_PATH),
+			});
+		}
 	};
 
 	componentDidMount() {
 		//if the first time getting to the screen
 		const user = firebase.auth().currentUser;
-        this.updateUserInfo(user);
-        this.updateProfilePhoto(user);
+		this.updateUserInfo(user);
+		this.updateProfilePhoto(user);
 		/**
 		 * this will go back to sign in screen if not authenticated
 		 */
 		this.authStateChangedUnsubscribe = firebase.auth().onAuthStateChanged(async (user) => {
 			if (user) {
 				// User is signed in.
-                this.updateUserInfo(user);
+				this.updateUserInfo(user);
 			} else {
 				// User signed out
 				this.props.navigation.navigate('SignIn');
@@ -99,7 +96,7 @@ class MyProfileScreen extends Component {
 	componentWillUnmount() {
 		//unsubscribing from auth state change listener
 		this.authStateChangedUnsubscribe();
-    }
+	}
 
 	/**
 	 * handling the click "Pick a photo"
@@ -120,12 +117,12 @@ class MyProfileScreen extends Component {
 		//if the user did not pick anything - stop the function
 		if (pickerResult.cancelled === true) {
 			return;
-        }
-        
-        //turn on the spinner
-        await this.setState({
-            spinnerOn: true,
-        })
+		}
+
+		//turn on the spinner
+		await this.setState({
+			spinnerOn: true,
+		});
 
 		//if the user picked an image
 		//store its initial uri - position in the cache
@@ -146,37 +143,42 @@ class MyProfileScreen extends Component {
 			const blob = await response.blob();
 
 			//putting the image into storage / replacing prev one
-            await photoRef.put(blob);
+			await photoRef.put(blob);
 
-            //the current user authenticated
-            const currentUser = firebase.auth().currentUser;
+			//the current user authenticated
+			const currentUser = firebase.auth().currentUser;
 
-            //the url of the brand new photo
-            const url = await firebase.storage().ref('profileImages/' + currentUser.uid).getDownloadURL();
+			//the url of the brand new photo
+			const url = await firebase
+				.storage()
+				.ref('profileImages/' + currentUser.uid)
+				.getDownloadURL();
 
-            //updating the photoUrl for fast future photo upload
-            await currentUser.updateProfile({
-                photoURL: url,
-            })
-            
-            //updating the photo on the screen
-            await this.updateProfilePhoto(currentUser);
+			//updating the photoUrl for fast future photo upload
+			await currentUser.updateProfile({
+				photoURL: url,
+			});
 
-            //turn the spinner off
-            this.setState({
-                spinnerOn: false,
-            });
+			//updating the photo on the screen
+			await this.updateProfilePhoto(currentUser);
 
-            // uploading the photoUrl to DB publicUsers
-            firebase.database().ref('usersPublic/' + currentUser.uid + '/photoUrl').set(url);
+			//turn the spinner off
+			this.setState({
+				spinnerOn: false,
+			});
 
+			// uploading the photoUrl to DB publicUsers
+			firebase
+				.database()
+				.ref('usersPublic/' + currentUser.uid + '/photoUrl')
+				.set(url);
 		} catch (err) {
 			//if you got an error log it and use the avatar image from assets
 			console.log(err);
 			return this.setState({
 				avatarSource: require(DEFAULT_AVATAR_PATH),
 			});
-        }
+		}
 	};
 
 	render() {
@@ -184,7 +186,7 @@ class MyProfileScreen extends Component {
 			<CustomScrollView backgroundColor={Colors.backgroundGrey} style={styles.container}>
 				{/* container for the photo picking stuff */}
 				<View style={styles.photoPickerContainer}>
-					<Text style={styles.userInfoText}>{this.state.fullName}</Text>
+					<Text style={styles.userInfoText}>{this.state.fullName.toUpperCase()}</Text>
 					{/* the avatar container */}
 					<View style={styles.imageContainer}>
 						<Avatar source={this.state.avatarSource} width={AVATAR_WIDTH_HEIGHT} />
@@ -202,8 +204,16 @@ class MyProfileScreen extends Component {
 					<Text style={styles.userInfoText}>{this.state.email}</Text>
 					<Text style={styles.userInfoText}>{this.state.username}</Text>
 				</View>
-                <ActivityIndicator animating={this.state.spinnerOn} style={{marginVertical: 15}} size="large" />
+				<ActivityIndicator animating={this.state.spinnerOn} style={{ marginVertical: 15 }} size="large" />
 				<View style={styles.options}>
+
+					<OptionsButton
+						iconName="bank"
+						title="Bank Information"
+						onPress={() => {
+							this.props.navigation.navigate('BankInfo');
+						}}
+					/>
 					<OptionsButton
 						iconName="credit-card"
 						title="Payment Methods"

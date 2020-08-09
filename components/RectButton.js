@@ -11,7 +11,7 @@ import FontSizes from '../constants/fontSizes';
  */
 const RectButton = props => (
     <TouchableOpacity activeOpacity={0.5} onPress={props.onPress} >
-        <View style={styles.button} >
+        <View style={{ ...styles.button, backgroundColor: props.color }} >
             <Text style={styles.title} >{props.title}</Text>
         </View>
     </TouchableOpacity>
@@ -20,11 +20,10 @@ const RectButton = props => (
 const styles = StyleSheet.create({
     button: {
         borderRadius: 5,
-        backgroundColor: Colors.screenColor,
         justifyContent: 'center',
         alignItems: 'center',
         paddingVertical: 10,
-
+        marginBottom: 10,
     },
     title: {
         color: Colors.customWhite,

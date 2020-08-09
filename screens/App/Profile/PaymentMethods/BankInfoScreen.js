@@ -45,7 +45,6 @@ class BankInfoScreen extends Component {
 	render() {
 		return (
 			<CustomScrollView style={styles.screen} >
-                
 				<View style={styles.select} >
 					<RNPickerSelect
 						onValueChange={(value) => this.setState({ selectedBank: value, bankInfo: null })}
@@ -55,7 +54,9 @@ class BankInfoScreen extends Component {
 					/>
 				</View>
                 <View style={styles.submit} >
-                    <RectButton title="Submit"  onPress={this.onSubmit} />
+                    <RectButton color={Colors.screenColor} title="Submit"  onPress={this.onSubmit} />
+                    <Text>Note: this is the bank info that will be used to send money to your bank account.</Text>
+                    <Text>You can only have one bank account registered in your profile. If you have connected one already, this will override it.</Text>
                 </View>
                 <View style={styles.inputs} >
                     {this.state.selectedBank === null ? null :
@@ -63,13 +64,14 @@ class BankInfoScreen extends Component {
                             return (
                                 <View key={idx} style={styles.inputCluster} >
                                     <Text style={styles.inputText}>{fieldName}</Text>
+
                                     <LargeInput value={this.state.bankInfo ? this.state.bankInfo[fieldName] : ''} placeholder="" onChangeText={(text) => this.onChangeInput(fieldName, text)} />
                                 </View>
                             )
                         })
                     }
                 </View>
-
+                
 			</CustomScrollView>
 		);
 	}

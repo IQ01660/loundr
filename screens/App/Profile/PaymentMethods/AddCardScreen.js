@@ -74,7 +74,6 @@ class AddCardScreen extends Component {
 			await this.setTimer(5000)
 				.then(() => this._checkForError(reference))
 				.then((res) => {
-					console.log('res');
 					if (res) {
 						throw { err: 'incorrect info' };
 					} else {
@@ -82,8 +81,8 @@ class AddCardScreen extends Component {
 					}
 				})
 				.then(() => {
-					//then navigate to setting up bank info if no error
-					this.props.navigation.navigate('BankInfo');
+					//then navigate "My Profile"
+					this.props.navigation.navigate('MyProfile');
 					//turn off spinner
 					this.setState({
                         isLoading: false,
@@ -113,7 +112,6 @@ class AddCardScreen extends Component {
 	setTimer = (time) => {
 		return new Promise((resolve, reject) => {
 			setTimeout(() => {
-				console.log('executor done');
 				resolve('Done');
 			}, time);
 		});
@@ -126,7 +124,6 @@ class AddCardScreen extends Component {
 	};
 
 	_checkForError = (reference) => {
-		console.log('checking for errors...');
 		return firebase
 			.database()
             .ref(reference)
@@ -142,7 +139,7 @@ class AddCardScreen extends Component {
 		return (
 			<CustomScrollView style={styles.screen} backgroundColor={Colors.backgroundGrey}>
 				<View style={styles.addButton}>
-					<RectButton title="Next" onPress={this.onAdd} />
+					<RectButton color={Colors.screenColor} title="Next" onPress={this.onAdd} />
 				</View>
 
 				<ActivityIndicator size="large" animating={this.state.isLoading} />
