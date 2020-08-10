@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, StyleSheet, Text, TextInput, Alert } from 'react-native';
+import { View, StyleSheet, Text, TextInput, StatusBar } from 'react-native';
 
 import CustomScrollView from '../../../components/CustomScrollView';
 import SendButton from '../../../components/SendMoney/SendButton';
@@ -30,6 +30,8 @@ class SendMoneyScreen extends Component {
 		if (isNaN(amountFloat)) {
 			return;
         }
+
+        this.props.navigation.navigate('SelectCard');
         
         const charge = {
             amount: amountFloat * 100,
@@ -38,6 +40,8 @@ class SendMoneyScreen extends Component {
             receiver: this.state.receiver,
             act: 'pay',
         }
+
+
 
         const user = firebase.auth().currentUser;
 
@@ -109,7 +113,7 @@ class SendMoneyScreen extends Component {
 						<SendInput
 							value={this.state.amount}
 							onChangeText={this.onChangeAmount}
-							placeholder="24"
+							placeholder="24.99"
 							keyboardType="decimal-pad"
 							secureTextEntry={false}
 							autoCompleteType="off"
@@ -125,9 +129,11 @@ class SendMoneyScreen extends Component {
 						fontSize: FontSizes.credText,
 						fontFamily: 'mont-alt-regular',
 						paddingHorizontal: 15,
+                        paddingBottom: 50,
+                        
 					}}
-					numberOfLines={2}
-					maxLength={50}
+					numberOfLines={3}
+					//maxLength={100}
 					onChangeText={this.onChangeDescription}
 					value={this.state.description}
 				/>
@@ -144,7 +150,7 @@ const styles = StyleSheet.create({
 	buttons: {
 		width: '100%',
 		flexDirection: 'row',
-		marginTop: 100,
+		marginTop: 10,
 	},
 	buttonHolder: {
 		flex: 1,

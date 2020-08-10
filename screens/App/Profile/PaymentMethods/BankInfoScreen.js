@@ -44,7 +44,7 @@ class BankInfoScreen extends Component {
 
 	render() {
 		return (
-			<CustomScrollView style={styles.screen} >
+			<CustomScrollView style={styles.screen} keyboardVerticalOffset={100} backgroundColor={Colors.backgroundGrey} >
 				<View style={styles.select} >
 					<RNPickerSelect
 						onValueChange={(value) => this.setState({ selectedBank: value, bankInfo: null })}
@@ -65,7 +65,7 @@ class BankInfoScreen extends Component {
                                 <View key={idx} style={styles.inputCluster} >
                                     <Text style={styles.inputText}>{fieldName}</Text>
 
-                                    <LargeInput value={this.state.bankInfo ? this.state.bankInfo[fieldName] : ''} placeholder="" onChangeText={(text) => this.onChangeInput(fieldName, text)} />
+                                    <LargeInput autoCompleteType="off" autoCorrect={false} value={this.state.bankInfo ? this.state.bankInfo[fieldName] : ''} placeholder="" onChangeText={(text) => this.onChangeInput(fieldName, text)} />
                                 </View>
                             )
                         })

@@ -72,7 +72,7 @@ class App extends Component {
 		return (
 			<>
 				<EntryNavigator />
-				<StatusBar barStyle="light-content" />
+				<StatusBar hidden={true} />
 			</>
 		);
 	}

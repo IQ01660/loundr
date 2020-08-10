@@ -31,7 +31,6 @@ const INIT_DEL_SIZE = 1;
 class PaymentMethodsScreen extends Component {
 	state = {
 		cards: [], //users' payment methods
-		isLoading: true, //the spinner's state,
 	};
 
 	/**
@@ -78,7 +77,6 @@ class PaymentMethodsScreen extends Component {
 
 		return this.setState({
 			cards: cards,
-			isLoading: false,
 		});
     };
 
@@ -170,8 +168,6 @@ class PaymentMethodsScreen extends Component {
 				</View>
 
 				<View style={styles.cards}>{this.state.cards.map(this.renderCard)}</View>
-
-				<ActivityIndicator size="large" animating={this.state.isLoading} />
 			</CustomScrollView>
 		);
 	}

@@ -18,6 +18,7 @@ import SendMoneyScreen from '../screens/App/SendMoney/SendMoneyScreen';
 //other navigators
 import ProfileStackNavigator from './App/ProfileStackNavigator';
 import FindUsersStackNavigator from './App/FindUsersStackNavigator';
+import SendMoneyStackNavigator from './App/SendMoneyStackNavigator';
 
 const AppTabNavigator = createBottomTabNavigator(
     {
@@ -41,12 +42,12 @@ const AppTabNavigator = createBottomTabNavigator(
             screen: FriendsScreen,
             navigationOptions: {
                 tabBarIcon: ({ tintColor }) => {
-                    return <Feather name="users" color={tintColor} size={FontSizes.tabIcon} />;
+                    return <Feather name="archive" color={tintColor} size={FontSizes.tabIcon} />;
                 },
             },
         },
         SendMoney: {
-            screen: SendMoneyScreen,
+            screen: SendMoneyStackNavigator,
             navigationOptions: {
                 tabBarIcon: ({ tintColor }) => {
                     return <Feather name="send" color={tintColor} size={FontSizes.tabIcon} />;
