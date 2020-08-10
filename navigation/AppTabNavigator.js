@@ -12,8 +12,7 @@ import FontSizes from '../constants/fontSizes';
 import { Feather, Ionicons } from '@expo/vector-icons'; 
 
 //screens
-import FriendsScreen from '../screens/App/Users/FriendsScreen';
-import SendMoneyScreen from '../screens/App/SendMoney/SendMoneyScreen';
+import TransactionsScreen from '../screens/App/Transactions/TransactionsScreen';
 
 //other navigators
 import ProfileStackNavigator from './App/ProfileStackNavigator';
@@ -38,15 +37,15 @@ const AppTabNavigator = createBottomTabNavigator(
                 },
             },
         },
-        Friends: {
-            screen: FriendsScreen,
+        Transactions: {
+            screen: TransactionsScreen,
             navigationOptions: {
                 tabBarIcon: ({ tintColor }) => {
                     return <Feather name="archive" color={tintColor} size={FontSizes.tabIcon} />;
                 },
             },
         },
-        SendMoney: {
+        SendMoneyStack: {
             screen: SendMoneyStackNavigator,
             navigationOptions: {
                 tabBarIcon: ({ tintColor }) => {

@@ -68,12 +68,27 @@ class SelectCardScreen extends Component {
 				iconName="credit-card"
 				title={'**** **** **** ' + card.last_4}
 				onPress={() => {
-					console.log('Select...');
+					this.onSelectCard(card.fingerprint);
 				}}
                 isLast={index === cards.length - 1}
 			/>
 		</View>
-	);
+    );
+    
+    onSelectCard = (fingerprint) => {
+        const charge = this.props.navigation.getParam("charge");
+        const user = this.props.navigation.getParam("user");
+
+        charge.source_fingerprint = fingerprint;
+
+        const chargesRef = firebase.database().ref('stripe_customers/' + user.uid + '/charges');
+        const newChargeRef = chargesRef.push();
+
+        newChargeRef.set(charge);
+
+        this.props.navigation.navigate('SelectUser'); // unmount all this pay process thingy
+        this.props.navigation.navigate('Transactions'); // go to transactions
+    }
 
 	render() {
 		return (

@@ -43,8 +43,10 @@ class FindUsersScreen extends Component {
 			.once('value')
 			.then((users) => {
 				users.forEach((user) => {
-					if (user.val().username.includes(this.state.searchValue)) {
-						usersList.push({ ...user.val(), id: user.key });
+                    if (user.val().username.includes(this.state.searchValue) && 
+                        user.key !== firebase.auth().currentUser.uid) 
+                    {
+                        usersList.push({ ...user.val(), id: user.key });
 					}
 				});
 			})
@@ -106,7 +108,10 @@ class FindUsersScreen extends Component {
                                 uid={item.id}
                                 displayName={item.displayName}
                                 onPress={() => {
-                                    console.log("sending....");
+                                    this.props.navigation.navigate('SendMoney', {
+                                        displayName: item.displayName,
+                                        uid: item.id,
+                                    });
                                 }}
                             />
 						);

@@ -1,12 +1,12 @@
 import React, { Component } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 
-class FriendsScreen extends Component
+class TransactionsScreen extends Component
 {
     render() {
         return (
             <View>
-                <Text>My Friends</Text>
+                <Text>Transactions</Text>
             </View>
         );
     }
@@ -16,4 +16,4 @@ const styles = StyleSheet.create({
 
 });
 
-export default FriendsScreen;
+export default TransactionsScreen;

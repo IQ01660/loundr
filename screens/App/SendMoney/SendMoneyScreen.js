@@ -14,7 +14,8 @@ import "firebase/database";
 
 class SendMoneyScreen extends Component {
 	state = {
-		receiver: 'Luka Djuranovic',
+        receiver: this.props.navigation.getParam("displayName"),
+        receiver_uid: this.props.navigation.getParam("uid"),
 		amount: '', // a string but needs to be a float when sending to backend
 		description: '',
 	};
@@ -31,24 +32,20 @@ class SendMoneyScreen extends Component {
 			return;
         }
 
-        this.props.navigation.navigate('SelectCard');
-        
         const charge = {
             amount: amountFloat * 100,
-            source_fingerprint: "4Wn98szjcz3r3y1U",
-            description: this.state.description,
+            note: this.state.description,
             receiver: this.state.receiver,
+            receiver_uid: this.state.receiver_uid,
             act: 'pay',
         }
 
-
-
         const user = firebase.auth().currentUser;
 
-        const chargesRef = firebase.database().ref('stripe_customers/' + user.uid + '/charges');
-        const newChargeRef = chargesRef.push();
-
-        return newChargeRef.set(charge);
+        this.props.navigation.navigate('SelectCard', {
+            charge: charge,
+            user: user,
+        });
     };
 
     /**
@@ -77,7 +74,6 @@ class SendMoneyScreen extends Component {
 	};
 
 	onChangeDescription = (description) => {
-		console.log(description);
 		this.setState({
 			description: description,
 		});

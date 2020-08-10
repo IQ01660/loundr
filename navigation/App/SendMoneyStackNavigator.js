@@ -11,9 +11,16 @@ import FontSizes from '../../constants/fontSizes';
 //screens
 import SendMoneyScreen from '../../screens/App/SendMoney/SendMoneyScreen';
 import SelectCardScreen from '../../screens/App/SendMoney/SelectCardScreen';
+import FindUsersScreen from '../../screens/App/Users/FindUsersScreen';
 
 const SendMoneyStackNavigator = createStackNavigator(
     {
+        SelectUser: {
+            screen: FindUsersScreen,
+            navigationOptions: {
+                title: "Select a User",
+            }
+        },
         SendMoney: {
             screen: SendMoneyScreen,
             navigationOptions: {
@@ -28,7 +35,7 @@ const SendMoneyStackNavigator = createStackNavigator(
         },
     },
     {
-		initialRouteName: 'SendMoney',
+		initialRouteName: 'SelectUser',
 		defaultNavigationOptions: {
             headerBackTitle: "Back",
 			headerStyle: {
