@@ -12,6 +12,7 @@ import FontSizes from '../../constants/fontSizes';
 import SendMoneyScreen from '../../screens/App/SendMoney/SendMoneyScreen';
 import SelectCardScreen from '../../screens/App/SendMoney/SelectCardScreen';
 import FindUsersScreen from '../../screens/App/Users/FindUsersScreen';
+import ConfirmPaymentScreen from '../../screens/App/SendMoney/ConfirmPaymentScreen';
 
 const SendMoneyStackNavigator = createStackNavigator(
     {
@@ -31,6 +32,12 @@ const SendMoneyStackNavigator = createStackNavigator(
             screen: SelectCardScreen,
             navigationOptions: {
                 title: "Select a Card",
+            },
+        },
+        ConfirmPayment: {
+            screen: ConfirmPaymentScreen,
+            navigationOptions: {
+                title: "Confirmation",
             },
         },
     },

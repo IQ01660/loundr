@@ -6,6 +6,7 @@ import FontSizes from '../constants/fontSizes';
 /**
  * @title
  * @onPress
+ * @color
  * takes the whole width of the container
  * @param {*} props 
  */

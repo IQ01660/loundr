@@ -52,7 +52,7 @@ class SendMoneyScreen extends Component {
      * Requesting money from another user
      */
 	onRequest = () => {
-        
+        this.props.navigation.navigate('ConfirmPayment');
     };
 
 	onChangeAmount = (amount) => {

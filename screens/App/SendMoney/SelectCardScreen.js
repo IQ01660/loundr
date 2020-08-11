@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet, ActivityIndicator } from 'react-native';
 
 import CustomScrollView from '../../../components/CustomScrollView';
 import OptionsButton from '../../../components/OptionsButton';
+import ErrorMessage from '../../../components/Auth/ErrorMessage'
 
 import Colors from '../../../constants/colors';
 import FontSizes from '../../../constants/fontSizes';
@@ -13,7 +14,9 @@ import "firebase/database";
 
 class SelectCardScreen extends Component {
 	state = {
-		cards: [],
+        cards: [],
+        areButtonsDisabled: false,
+        hasError: false,
 	};
 
 	componentDidMount() {
@@ -45,7 +48,7 @@ class SelectCardScreen extends Component {
 		}
 
 		return this.setState({
-			cards: cards,
+            cards: cards,
 		});
 	};
 
@@ -68,7 +71,10 @@ class SelectCardScreen extends Component {
 				iconName="credit-card"
 				title={'**** **** **** ' + card.last_4}
 				onPress={() => {
-					this.onSelectCard(card.fingerprint);
+                    if (!this.state.areButtonsDisabled)
+                    {
+                        this.onSelectCard(card.fingerprint);
+                    }
 				}}
                 isLast={index === cards.length - 1}
 			/>
@@ -80,21 +86,65 @@ class SelectCardScreen extends Component {
         const user = this.props.navigation.getParam("user");
 
         charge.source_fingerprint = fingerprint;
-
         const chargesRef = firebase.database().ref('stripe_customers/' + user.uid + '/charges');
         const newChargeRef = chargesRef.push();
 
-        newChargeRef.set(charge);
+        Promise.resolve()
+        .then(() => {
+            return this.setState({
+                areButtonsDisabled: true,
+            })
+        })
+        .then(() => {
+            return newChargeRef.set(charge);
+        })
+        .then(() => {
+            return this.setTimer(1000);
+        })
+        .then(async () => {
+            const hasError = await newChargeRef.once('value').then(snap => snap.val().error)
 
-        this.props.navigation.navigate('SelectUser'); // unmount all this pay process thingy
-        this.props.navigation.navigate('Transactions'); // go to transactions
+            if (hasError)
+            {
+                throw {msg: "an error occured"};
+            }
+        })
+        .then(() => {
+            return this.setState({
+                areButtonsDisabled: false,
+                hasError: false,
+            })
+        })
+        .then(() => {
+            this.props.navigation.navigate('ConfirmPayment');
+        })
+        .catch(() => {
+            this.setState({
+                areButtonsDisabled: false,
+                hasError: true,
+            });
+        })
+        
     }
+
+    setTimer = (time) => {
+		return new Promise((resolve) => {
+			setTimeout(() => {
+				resolve('Done');
+			}, time);
+		});
+	};
 
 	render() {
 		return (
 			<CustomScrollView style={styles.container} backgroundColor={Colors.backgroundGrey}>
+                <ActivityIndicator size="large" animating={this.state.areButtonsDisabled} />
+                
                 <Text style={{ marginVertical: 20, }} >Select a card to complete the payment</Text>
-				<View style={styles.cards}>{this.state.cards.map(this.renderCard)}</View>
+
+                {this.state.hasError ? <ErrorMessage>Error occured in charging your card</ErrorMessage> : null}
+				
+                <View style={styles.cards}>{this.state.cards.map(this.renderCard)}</View>
 			</CustomScrollView>
 		);
 	}
