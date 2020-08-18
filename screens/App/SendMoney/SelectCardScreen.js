@@ -99,7 +99,7 @@ class SelectCardScreen extends Component {
             return newChargeRef.set(charge);
         })
         .then(() => {
-            return this.setTimer(1000);
+            return this.setTimer(2000);
         })
         .then(async () => {
             const hasError = await newChargeRef.once('value').then(snap => snap.val().error)

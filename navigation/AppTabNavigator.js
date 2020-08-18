@@ -11,13 +11,11 @@ import FontSizes from '../constants/fontSizes';
 //icon imports
 import { Feather, Ionicons } from '@expo/vector-icons'; 
 
-//screens
-import TransactionsScreen from '../screens/App/Transactions/TransactionsScreen';
-
 //other navigators
 import ProfileStackNavigator from './App/ProfileStackNavigator';
 import FindUsersStackNavigator from './App/FindUsersStackNavigator';
 import SendMoneyStackNavigator from './App/SendMoneyStackNavigator';
+import TransactionsStackNavigator from './App/TransactionsStackNavigator';
 
 const AppTabNavigator = createBottomTabNavigator(
     {
@@ -38,7 +36,7 @@ const AppTabNavigator = createBottomTabNavigator(
             },
         },
         Transactions: {
-            screen: TransactionsScreen,
+            screen: TransactionsStackNavigator,
             navigationOptions: {
                 tabBarIcon: ({ tintColor }) => {
                     return <Feather name="archive" color={tintColor} size={FontSizes.tabIcon} />;

@@ -33,6 +33,7 @@ export default class ConfirmPaymentScreen extends React.Component {
 						color={Colors.logoColor}
 						onPress={() => {
 							this.props.navigation.navigate('SelectUser'); //unmount all this pay process thingy
+                            
 							this.props.navigation.navigate('Transactions'); //go to transactions
 							return;
 						}}
