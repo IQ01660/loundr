@@ -25,7 +25,7 @@ const SendMoneyStackNavigator = createStackNavigator(
         SendMoney: {
             screen: SendMoneyScreen,
             navigationOptions: {
-                title: "Pay or Request",
+                title: "Pay",
             }
         },
         SelectCard: {

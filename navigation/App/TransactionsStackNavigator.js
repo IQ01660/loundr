@@ -10,6 +10,7 @@ import FontSizes from '../../constants/fontSizes';
 
 //screens
 import TransactionsScreen from '../../screens/App/Transactions/TransactionsScreen';
+import PaymentInfo from '../../screens/App/Transactions/PaymentInfo';
 
 const TransactionsStackNavigator = createStackNavigator(
 	{
@@ -17,6 +18,12 @@ const TransactionsStackNavigator = createStackNavigator(
 			screen: TransactionsScreen,
 			navigationOptions: {
 				title: 'Payments',
+            },
+        },
+        PaymentInfo: {
+            screen: PaymentInfo,
+            navigationOptions: {
+                title: "Payment Info",
             },
         },
 	},

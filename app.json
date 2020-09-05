@@ -1,10 +1,13 @@
 {
   "expo": {
-    "name": "loundr",
+    "name": "Loundr",
     "slug": "loundr",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
+    "description": "Loundr will make money transaction seem like a breeze",
+    "privacy": "public",
+    "sdkVersion": "38.0.0",
+    "icon": "./assets/icon-1024.png",
     "splash": {
       "image": "./assets/splash.png",
       "resizeMode": "contain",
@@ -13,11 +16,19 @@
     "updates": {
       "fallbackToCacheTimeout": 0
     },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
+    "assetBundlePatterns": [],
     "ios": {
-      "supportsTablet": true
+        "bundleIdentifier": "dev.loundr.loundr-app",
+        "buildNumber": "1.0.0",
+        "supportsTablet": false
+    },
+    "android": {
+        "versionCode": 1,
+        "package": "dev.loundr.loundr_app",
+        "adaptiveIcon": {
+            "foregroundImage": "./assets/icon-1024.png",
+            "backgroundColor": "#5f5d80"
+        }
     },
     "web": {
       "favicon": "./assets/favicon.png"

@@ -83,15 +83,16 @@ class SendMoneyScreen extends Component {
 		return (
 			<CustomScrollView style={styles.container} backgroundColor={Colors.backgroundGrey}>
 				<View style={styles.buttons}>
-					<View style={styles.buttonHolder}>
+                {/* THIS WILL BE INCLUDED LATER */}
+					{/* <View style={styles.buttonHolder}>
 						<SendButton
 							onPress={this.onRequest}
 							title="Request"
-							color={Colors.btnColor}
+							color={Colors.logoColor}
 						/>
-					</View>
+					</View> */}
 					<View style={styles.buttonHolder}>
-						<SendButton onPress={this.onPay} title="Pay" color={Colors.logoColor} />
+						<SendButton onPress={this.onPay} title="Pay" color={Colors.btnColor} />
 					</View>
 				</View>
 				<View style={styles.primaryInputs}>

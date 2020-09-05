@@ -9,45 +9,43 @@ import 'firebase/database';
 
 class TransactionsScreen extends Component {
 	state = {
-        charges: [],
-    };
+		charges: [],
+	};
 
-    componentDidMount()
-    {
-        this.updateChargesState();
-    }
-    
-    updateChargesState = () => {
-        const chargesArray = []
+	componentDidMount() {
+		this.updateChargesState();
+	}
 
-        this.fetchChargesAsync()
-        .then(charges => {
-            charges.forEach(charge => {
-                if (charge.val().status === "succeeded")
-                {
-                    //add successful charges to the chargesArray
-                    chargesArray.push(charge.val());
-                }
-            })
-        })
-        .then(() => {
-            //reversing the array
-            return chargesArray.reverse()
-        })
-        .then(() => {
-            //update the charges state
-            this.setState({
-                charges: chargesArray,
-            });
-        })
-        .catch(console.log);
-    };
+	updateChargesState = () => {
+		const chargesArray = [];
 
-    /**
-     * Returns a promise with the snap
-     * of all charges of the user
-     * ordered by creation time (ascending, so reverse it later)
-     */
+		this.fetchChargesAsync()
+			.then((charges) => {
+				charges.forEach((charge) => {
+					if (charge.val().status === 'succeeded') {
+						//add successful charges to the chargesArray
+						chargesArray.push(charge.val());
+					}
+				});
+			})
+			.then(() => {
+				//reversing the array
+				return chargesArray.reverse();
+			})
+			.then(() => {
+				//update the charges state
+				this.setState({
+					charges: chargesArray,
+				});
+			})
+			.catch(console.log);
+	};
+
+	/**
+	 * Returns a promise with the snap
+	 * of all charges of the user
+	 * ordered by creation time (ascending, so reverse it later)
+	 */
 	fetchChargesAsync = () => {
 		const user = firebase.auth().currentUser;
 		return firebase
@@ -57,17 +55,34 @@ class TransactionsScreen extends Component {
 			.once('value');
     };
     
-    renderCharge = ({ item, index }) => {
-        return (
-            <ChargeStory note={item.note} receiver={item.receiver} amount={(item.amount_received / 100).toFixed(2)} isLast={index === this.state.charges.length - 1} />
-        );
-    };
+    onPaymentInfo = (item) => {
+        this.props.navigation.navigate('PaymentInfo', {
+            receipt_url: item.charges.data[0].receipt_url,
+            receiver_uid: item.receiver_uid,
+        })
+    }
 
-    render() 
-    {
+	renderCharge = ({ item, index }) => {
 		return (
-			<View style={styles.screen} >
-				<FlatList onRefresh={this.updateChargesState} refreshing={false} data={this.state.charges} renderItem={this.renderCharge} />
+			<ChargeStory
+                onPress={() => this.onPaymentInfo(item)}
+				note={item.note}
+				receiver={item.receiver}
+				amount={(item.amount_received / 100).toFixed(2)}
+				isLast={index === this.state.charges.length - 1}
+			/>
+		);
+	};
+
+	render() {
+		return (
+			<View style={styles.screen}>
+				<FlatList
+					onRefresh={this.updateChargesState}
+					refreshing={false}
+					data={this.state.charges}
+					renderItem={this.renderCharge}
+				/>
 			</View>
 		);
 	}

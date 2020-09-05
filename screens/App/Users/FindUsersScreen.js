@@ -1,6 +1,11 @@
 import React, { Component } from 'react';
 import { View, StyleSheet, Keyboard, FlatList, Platform } from 'react-native';
 
+/**
+ * Note: users bank info should have
+ * verified: "verified" to get displayed
+ */
+
 //constants
 import Colors from '../../../constants/colors';
 import FontSizes from '../../../constants/fontSizes';
@@ -43,18 +48,27 @@ class FindUsersScreen extends Component {
 			.once('value')
 			.then((users) => {
 				users.forEach((user) => {
-                    if (user.val().username.includes(this.state.searchValue) && 
-                        user.key !== firebase.auth().currentUser.uid) 
-                    {
-                        usersList.push({ ...user.val(), id: user.key });
-					}
+					firebase
+						.database()
+						.ref('/usersBankInfo/' + user.key + '/verified')
+						.once('value')
+						.then((snap) => snap.val() === 'verified')
+						.then((isVerified) => {
+							if (
+								isVerified &&
+								user.val().username.includes(this.state.searchValue) &&
+								user.key !== firebase.auth().currentUser.uid
+							) {
+								usersList.push({ ...user.val(), id: user.key });
+							}
+						})
+						.then(() =>
+							this.setState({
+								searchedUsers: usersList,
+							})
+						);
 				});
-			})
-			.then(() =>
-				this.setState({
-					searchedUsers: usersList,
-				})
-			);
+			});
 	};
 
 	onCancel = () => {
@@ -102,18 +116,18 @@ class FindUsersScreen extends Component {
 					data={this.state.searchedUsers}
 					renderItem={({ item }) => {
 						return (
-                            <UserButton
-                                source={item.photoUrl ? { uri: item.photoUrl } : require(AVATAR_DEFAULT_SOURCE)}
-                                username={item.username}
-                                uid={item.id}
-                                displayName={item.displayName}
-                                onPress={() => {
-                                    this.props.navigation.navigate('SendMoney', {
-                                        displayName: item.displayName,
-                                        uid: item.id,
-                                    });
-                                }}
-                            />
+							<UserButton
+								source={item.photoUrl ? { uri: item.photoUrl } : require(AVATAR_DEFAULT_SOURCE)}
+								username={item.username}
+								uid={item.id}
+								displayName={item.displayName}
+								onPress={() => {
+									this.props.navigation.navigate('SendMoney', {
+										displayName: item.displayName,
+										uid: item.id,
+									});
+								}}
+							/>
 						);
 					}}
 				/>

@@ -221,8 +221,8 @@ class MyProfileScreen extends Component {
 							this.props.navigation.navigate('PaymentMethods');
 						}}
 					/>
-					<OptionsButton iconName="lock" title="Privacy" />
-					<OptionsButton iconName="user" title="Edit Profile" />
+					{/* <OptionsButton iconName="lock" title="Privacy" />
+					<OptionsButton iconName="user" title="Edit Profile" /> */}
 					<OptionsButton
 						iconName="sign-out"
 						title="Sign Out"

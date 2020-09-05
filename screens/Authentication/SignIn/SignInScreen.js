@@ -21,8 +21,6 @@ import MinorButton from '../../../components/MinorButton';
 import ErrorMessage from '../../../components/Auth/ErrorMessage';
 
 class SignInScreen extends Component {
-	static navigationOptions = {};
-
 	state = {
 		//contains the values entered of the input fields
 		userInputs: {
@@ -189,6 +187,7 @@ class SignInScreen extends Component {
 								title="Sign In"
 								backgroundColor={Colors.btnColor}
 								onPress={this.onSignIn}
+                                disabled={this.state.isLoading}
 							/>
 
 							{/* Go to Log In Page */}

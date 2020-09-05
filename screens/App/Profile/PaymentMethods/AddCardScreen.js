@@ -130,7 +130,6 @@ class AddCardScreen extends Component {
             .child('error')
 			.once('value')
 			.then((snap) => {
-                console.log(snap.val());
 				return snap.val();
 			});
 	};
